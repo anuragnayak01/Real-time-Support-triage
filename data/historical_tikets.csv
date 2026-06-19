@@ -1,0 +1,26 @@
+problem,solution,issue_type,module
+Login fails after update,Clear browser cache and re-login,login_failure,authentication
+Cannot log in — password reset not working,Use Forgot Password link and check spam folder,login_failure,authentication
+Payment deducted but order not placed,Refund initiated within 3-5 business days,payment_issue,billing
+Charged twice for same order,Duplicate charge reversed — check bank in 2 days,payment_issue,billing
+App crashes when uploading PDF,Update app to v2.1 — memory leak patched,crash,upload
+App freezes on document upload,Force-close and update to latest version,crash,upload
+OTP not received on phone,Retry after 5 minutes and verify mobile number is correct,otp_issue,authentication
+Verification code not arriving,Check if number is correct; try SMS resend after 5 min,otp_issue,authentication
+Dark mode not saving after logout,Re-login to refresh user preferences from server,settings_bug,ui
+App theme resets every session,Known bug — fixed in v2.2 update,settings_bug,ui
+Notifications not showing,Enable notifications in device Settings > App > Notifications,notification_issue,settings
+Push alerts stopped working,Re-toggle notification permissions in phone settings,notification_issue,settings
+Cannot export data to CSV,Use Export button on desktop browser — mobile export disabled,export_issue,data
+Export button not responding,Clear cache and try export on Chrome desktop,export_issue,data
+Slow loading on 4G network,Enable data saver mode in app settings,performance,network
+App takes too long to load,"Force-close, clear cache, reopen on strong WiFi",performance,network
+Account locked after failed logins,Wait 30 minutes or contact support to unlock manually,account_locked,authentication
+Locked out of account,Security lockout — use account recovery email link,account_locked,authentication
+Wrong order delivered,Raise a replacement request — team will redeliver within 24h,wrong_order,fulfillment
+Received someone else's package,Log issue in app — return label will be emailed,wrong_order,fulfillment
+Subscription auto-renewed unexpectedly,Disable auto-renew in Account > Subscriptions settings,billing_issue,billing
+Charged for subscription I cancelled,Cancellation may not have saved — check Account > Plan,billing_issue,billing
+Search results not loading,Clear app cache and check internet connection,search_bug,search
+Filter not working in search,Known issue — workaround: use category tabs instead,search_bug,search
+Profile photo not updating,Photos must be under 2MB and JPG/PNG format only,profile_issue,profile
