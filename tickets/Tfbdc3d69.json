@@ -1,0 +1,35 @@
+{
+  "key": "Tfbdc3d69",
+  "fields": {
+    "summary": "I was charged twice and now I am locked out of my account. Fix this immediately.",
+    "description": {
+      "customer_message": "I was charged twice and now I am locked out of my account. Fix this immediately.",
+      "retrieved_solution": "No match found.",
+      "drafted_response": "I'm so sorry to hear that you've been charged twice and are now locked out of your account - I can imagine how frustrating that must be for you. I want to assure you that we're taking immediate action to resolve this issue. Please allow me to look into this further and I will do my best to provide a solution as soon as possible. I will work to ensure that the duplicate charge is reversed and your account is reinstated promptly. \n\nThe Support Team"
+    },
+    "issuetype": {
+      "name": "Bug"
+    },
+    "priority": {
+      "name": "Highest"
+    },
+    "labels": [
+      "intercom",
+      "billing",
+      "highly_negative"
+    ],
+    "customfield_sentiment_score": -0.8,
+    "customfield_channel": "intercom",
+    "customfield_module": "billing",
+    "customfield_issue_type": "account_locked",
+    "status": {
+      "name": "Open"
+    },
+    "assignee": null,
+    "reporter": {
+      "name": "support-triager-bot"
+    },
+    "created": "2026-06-19T20:27:56.129480+00:00",
+    "updated": "2026-06-19T20:27:59.269621+00:00"
+  }
+}

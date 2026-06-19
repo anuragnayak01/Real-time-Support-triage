@@ -1,0 +1,271 @@
+{
+  "name": "Support Triager Intake",
+  "nodes": [
+    {
+      "id": "node-webhook-intercom",
+      "name": "Webhook (Intercom / Live Chat)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "path": "support",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "support-triager-intercom"
+    },
+    {
+      "id": "node-set-channel-intercom",
+      "name": "Tag channel: intercom",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [420, 300],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-message",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-channel",
+              "name": "channel",
+              "value": "intercom",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-manual-email",
+      "name": "Manual Trigger (Email simulation)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 500],
+      "parameters": {}
+    },
+    {
+      "id": "node-set-email-payload",
+      "name": "Email test payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [420, 500],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-message-email",
+              "name": "message",
+              "value": "I still haven't received my refund from 3 weeks ago. This is unacceptable.",
+              "type": "string"
+            },
+            {
+              "id": "assign-channel-email",
+              "name": "channel",
+              "value": "email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-schedule-appstore",
+      "name": "Schedule Trigger (App Store polling)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [200, 700],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "node-set-appstore-payload",
+      "name": "App Store test payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [420, 700],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-message-appstore",
+              "name": "message",
+              "value": "App keeps crashing on iOS 17 whenever I try to open my profile. 1 star.",
+              "type": "string"
+            },
+            {
+              "id": "assign-channel-appstore",
+              "name": "channel",
+              "value": "app_store",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-triage-api",
+      "name": "POST /triage (FastAPI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 500],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/triage",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ message: $json.message, channel: $json.channel }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "node-if-critical",
+      "name": "Is Critical?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 500],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-critical",
+              "leftValue": "={{ $json.priority }}",
+              "rightValue": "Critical",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "node-log-critical",
+      "name": "Log: CRITICAL ticket",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1120, 400],
+      "parameters": {}
+    },
+    {
+      "id": "node-log-normal",
+      "name": "Log: normal ticket",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1120, 600],
+      "parameters": {}
+    },
+    {
+      "id": "node-respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('POST /triage (FastAPI)').item.json }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook (Intercom / Live Chat)": {
+      "main": [
+        [{ "node": "Tag channel: intercom", "type": "main", "index": 0 }]
+      ]
+    },
+    "Tag channel: intercom": {
+      "main": [
+        [{ "node": "POST /triage (FastAPI)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Manual Trigger (Email simulation)": {
+      "main": [
+        [{ "node": "Email test payload", "type": "main", "index": 0 }]
+      ]
+    },
+    "Email test payload": {
+      "main": [
+        [{ "node": "POST /triage (FastAPI)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Schedule Trigger (App Store polling)": {
+      "main": [
+        [{ "node": "App Store test payload", "type": "main", "index": 0 }]
+      ]
+    },
+    "App Store test payload": {
+      "main": [
+        [{ "node": "POST /triage (FastAPI)", "type": "main", "index": 0 }]
+      ]
+    },
+    "POST /triage (FastAPI)": {
+      "main": [
+        [{ "node": "Is Critical?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Is Critical?": {
+      "main": [
+        [{ "node": "Log: CRITICAL ticket", "type": "main", "index": 0 }],
+        [{ "node": "Log: normal ticket",   "type": "main", "index": 0 }]
+      ]
+    },
+    "Log: CRITICAL ticket": {
+      "main": [
+        [{ "node": "Respond to Webhook", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 3,
+  "updatedAt": "2026-06-20T00:00:00.000Z",
+  "versionId": "1"
+}
