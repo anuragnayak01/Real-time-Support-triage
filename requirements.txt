@@ -5,7 +5,7 @@ langchain-groq
 pydantic
 requests
 python-dotenv
-crewai[litellm]
+crewai 
 llama-index-core
 llama-index-vector-stores-chroma
 llama-index-embeddings-huggingface
