@@ -1,10 +1,8 @@
 services:
   - type: web
-    name: InsightPulse
-    runtime: python
-    pythonVersion: "3.11.9"
-    buildCommand: "pip install -r requirements.txt && python src/knowledge_base.py"
-    startCommand: "cd src && uvicorn api:app --host 0.0.0.0 --port $PORT"
+    name: real-time-support-triage
+    env: docker
+    plan: free
     envVars:
       - key: GROQ_API_KEY
         sync: false
