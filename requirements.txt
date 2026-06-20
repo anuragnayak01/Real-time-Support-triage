@@ -5,14 +5,10 @@ langchain-groq
 pydantic
 requests
 python-dotenv
-crewai
 crewai[litellm]
 llama-index-core
 llama-index-vector-stores-chroma
 llama-index-embeddings-huggingface
 chromadb
 pandas
-streamlit
-streamlit-autorefresh
-plotly
-aiofiles   # needed by FastAPI's StaticFiles
+aiofiles
