@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: real-time-support-triage
+    name: InsightPulse
     env: docker
     plan: free
     envVars:

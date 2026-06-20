@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "real-time-support-triage"
+version = "0.1.0"
+description = "AI-powered customer support triage system"
+authors = ["Anurag Nayak"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
