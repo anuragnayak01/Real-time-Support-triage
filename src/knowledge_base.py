@@ -27,7 +27,7 @@ import chromadb
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.schema import TextNode
 from llama_index.vector_stores.chroma import ChromaVectorStore
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.embeddings.fastembed import FastEmbedEmbedding
 
 CSV_PATH = "data/historical_tickets.csv"
 CHROMA_PATH = "./chroma_db"
@@ -37,10 +37,10 @@ EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 _embed_model = None  # lazy singleton so we only load the model once per process
 
 
-def get_embed_model() -> HuggingFaceEmbedding:
+def get_embed_model() -> FastEmbedEmbedding:
     global _embed_model
     if _embed_model is None:
-        _embed_model = HuggingFaceEmbedding(model_name=EMBED_MODEL_NAME)
+        _embed_model = FastEmbedEmbedding(model_name=EMBED_MODEL_NAME)
     return _embed_model
 
 
