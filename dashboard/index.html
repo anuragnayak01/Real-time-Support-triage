@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Support Triager Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; min-height: 100vh; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; }
+  .sub { color: #94a3b8; font-size: 0.82rem; margin-bottom: 24px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .kpi { background: #1e293b; border-radius: 12px; padding: 18px 20px; }
+  .kpi-label { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .kpi-value { font-size: 2rem; font-weight: 700; }
+  .kpi-value.red    { color: #ef4444; }
+  .kpi-value.amber  { color: #f59e0b; }
+  .kpi-value.muted  { color: #e2e8f0; }
+
+  .charts-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .chart-box { background: #1e293b; border-radius: 12px; padding: 16px 18px; }
+  .chart-box h3 { font-size: 0.82rem; color: #94a3b8; margin-bottom: 12px; font-weight: 500; }
+
+  .full-box { background: #1e293b; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .full-box h3 { font-size: 0.82rem; color: #94a3b8; margin-bottom: 12px; font-weight: 500; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  th { color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; text-align: left; border-bottom: 1px solid #334155; font-weight: 500; }
+  td { padding: 9px 10px; border-bottom: 1px solid #1e293b; vertical-align: top; color: #cbd5e1; }
+  tr:hover td { background: #263045; }
+  td.mono { font-family: monospace; color: #64748b; font-size: 0.75rem; }
+  td.msg { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 9999px; font-size: 0.68rem; font-weight: 600; }
+  .Critical { background: #fef2f2; color: #dc2626; }
+  .High     { background: #fffbeb; color: #d97706; }
+  .Low      { background: #f0fdf4; color: #16a34a; }
+
+  .empty { text-align: center; padding: 40px; color: #475569; }
+
+  @media (max-width: 700px) {
+    .kpi-row   { grid-template-columns: 1fr 1fr; }
+    .charts-2  { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Real-Time Support Triager</h1>
+<p class="sub" id="last-updated">Loading...</p>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-label">Total tickets</div><div class="kpi-value muted" id="k-total">—</div></div>
+  <div class="kpi"><div class="kpi-label">Critical</div><div class="kpi-value red" id="k-critical">—</div></div>
+  <div class="kpi"><div class="kpi-label">Negative sentiment</div><div class="kpi-value amber" id="k-negative">—</div></div>
+  <div class="kpi"><div class="kpi-label">Avg sentiment score</div><div class="kpi-value muted" id="k-score">—</div></div>
+</div>
+
+<div class="charts-2">
+  <div class="chart-box"><h3>Volume over time</h3><div id="chart-vol" style="height:220px;"></div></div>
+  <div class="chart-box"><h3>Sentiment breakdown</h3><div id="chart-sent" style="height:220px;"></div></div>
+</div>
+
+<div class="charts-2">
+  <div class="chart-box"><h3>Priority distribution</h3><div id="chart-pri" style="height:200px;"></div></div>
+  <div class="chart-box"><h3>Channel breakdown</h3><div id="chart-ch" style="height:200px;"></div></div>
+</div>
+
+<div class="full-box">
+  <h3>Top issue types</h3>
+  <div id="chart-issue" style="height:200px;"></div>
+</div>
+
+<div class="full-box">
+  <h3>Latest tickets</h3>
+  <div id="table-wrap"></div>
+</div>
+
+<script>
+const PLOTLY_BASE = {
+  paper_bgcolor: 'transparent',
+  plot_bgcolor:  'transparent',
+  font:   { color: '#94a3b8', size: 11, family: 'system-ui, sans-serif' },
+  margin: { t: 10, b: 36, l: 40, r: 10 },
+  colorway: ['#6366f1','#1D9E75','#f59e0b','#ef4444','#06b6d4'],
+};
+
+function floorHour(ts) {
+  const d = new Date(ts);
+  d.setMinutes(0, 0, 0);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function fmtScore(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return (n >= 0 ? '+' : '') + n.toFixed(2);
+}
+
+function fmtTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderKPIs(data) {
+  const total    = data.length;
+  const critical = data.filter(t => t.priority === 'Critical').length;
+  const negative = data.filter(t => ['negative','highly_negative'].includes(t.sentiment)).length;
+  const scores   = data.map(t => parseFloat(t.sentiment_score)).filter(n => !isNaN(n));
+  const avg      = scores.length ? (scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+
+  document.getElementById('k-total').textContent    = total;
+  document.getElementById('k-critical').textContent = critical;
+  document.getElementById('k-negative').textContent = negative;
+  document.getElementById('k-score').textContent    = fmtScore(avg);
+}
+
+function renderVolumeChart(data) {
+  const counts = {};
+  data.forEach(t => {
+    const h = floorHour(t.timestamp);
+    counts[h] = (counts[h] || 0) + 1;
+  });
+  const hours = Object.keys(counts).sort();
+  Plotly.react('chart-vol', [{
+    x: hours, y: hours.map(h => counts[h]),
+    type: 'scatter', mode: 'lines+markers',
+    line: { color: '#6366f1', width: 2 },
+    marker: { color: '#6366f1', size: 6 },
+    fill: 'tozeroy', fillcolor: 'rgba(99,102,241,0.08)',
+    hovertemplate: '%{x}<br>%{y} tickets<extra></extra>'
+  }], {
+    ...PLOTLY_BASE,
+    xaxis: { color: '#64748b', showgrid: false },
+    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' }
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderSentimentChart(data) {
+  const map = {};
+  data.forEach(t => map[t.sentiment] = (map[t.sentiment] || 0) + 1);
+  const colors = { positive: '#22c55e', neutral: '#64748b', negative: '#f59e0b', highly_negative: '#ef4444' };
+  const labels = Object.keys(map);
+  Plotly.react('chart-sent', [{
+    labels, values: labels.map(l => map[l]),
+    type: 'pie', hole: 0.5,
+    marker: { colors: labels.map(l => colors[l] || '#6366f1') },
+    textinfo: 'label+percent',
+    textfont: { color: '#e2e8f0', size: 11 },
+    hovertemplate: '%{label}<br>%{value} tickets<extra></extra>'
+  }], { ...PLOTLY_BASE, showlegend: false }, { responsive: true, displayModeBar: false });
+}
+
+function renderPriorityChart(data) {
+  const order  = ['Critical','High','Low'];
+  const colors = { Critical: '#ef4444', High: '#f59e0b', Low: '#22c55e' };
+  const counts = { Critical: 0, High: 0, Low: 0 };
+  data.forEach(t => { if (counts[t.priority] !== undefined) counts[t.priority]++; });
+  Plotly.react('chart-pri', [{
+    x: order, y: order.map(p => counts[p]),
+    type: 'bar',
+    marker: { color: order.map(p => colors[p]) },
+    text: order.map(p => counts[p]),
+    textposition: 'outside',
+    textfont: { color: '#e2e8f0' },
+    hovertemplate: '%{x}: %{y}<extra></extra>'
+  }], {
+    ...PLOTLY_BASE,
+    xaxis: { color: '#64748b', showgrid: false },
+    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' },
+    showlegend: false
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderChannelChart(data) {
+  const map = {};
+  data.forEach(t => map[t.channel] = (map[t.channel] || 0) + 1);
+  const channels = Object.keys(map).sort();
+  const clrs = ['#6366f1','#1D9E75','#f59e0b','#06b6d4'];
+  Plotly.react('chart-ch', [{
+    x: channels, y: channels.map(c => map[c]),
+    type: 'bar',
+    marker: { color: clrs },
+    text: channels.map(c => map[c]),
+    textposition: 'outside',
+    textfont: { color: '#e2e8f0' },
+    hovertemplate: '%{x}: %{y}<extra></extra>'
+  }], {
+    ...PLOTLY_BASE,
+    xaxis: { color: '#64748b', showgrid: false },
+    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' },
+    showlegend: false
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderIssueChart(data) {
+  const map = {};
+  data.forEach(t => { if (t.issue_type) map[t.issue_type] = (map[t.issue_type] || 0) + 1; });
+  const sorted = Object.entries(map).sort((a,b) => a[1]-b[1]).slice(-8);
+  Plotly.react('chart-issue', [{
+    y: sorted.map(e => e[0]),
+    x: sorted.map(e => e[1]),
+    type: 'bar', orientation: 'h',
+    marker: { color: sorted.map((_,i) => `hsl(${240 - i*18},60%,${55+i*3}%)`), },
+    hovertemplate: '%{y}: %{x}<extra></extra>'
+  }], {
+    ...PLOTLY_BASE,
+    margin: { t: 10, b: 30, l: 110, r: 30 },
+    xaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1 },
+    yaxis: { color: '#94a3b8', showgrid: false },
+    showlegend: false
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderTable(data) {
+  const wrap = document.getElementById('table-wrap');
+  if (!data.length) {
+    wrap.innerHTML = '<p class="empty">No tickets yet. POST a message to /triage to get started.</p>';
+    return;
+  }
+  const priEmoji = { Critical: '🔴', High: '🟠', Low: '🟢' };
+  const rows = data.slice(0, 20).map(t => `
+    <tr>
+      <td class="mono">${t.ticket_id || '—'}</td>
+      <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">${fmtTime(t.timestamp)}</td>
+      <td>${t.channel || '—'}</td>
+      <td><span class="badge ${t.priority}">${priEmoji[t.priority] || ''} ${t.priority}</span></td>
+      <td>${t.sentiment || '—'}</td>
+      <td>${t.issue_type || '—'}</td>
+      <td class="msg" title="${(t.message||'').replace(/"/g,"'")}">
+        ${(t.message||'').slice(0,80)}${(t.message||'').length > 80 ? '…' : ''}
+      </td>
+    </tr>`).join('');
+
+  wrap.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Ticket ID</th><th>Time</th><th>Channel</th>
+        <th>Priority</th><th>Sentiment</th><th>Issue type</th><th>Message</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+async function refresh() {
+  try {
+    const res  = await fetch('/tickets/recent?limit=200');
+    const data = await res.json();
+    document.getElementById('last-updated').textContent =
+      'Auto-refreshes every 30s · Last updated: ' + new Date().toLocaleTimeString();
+    renderKPIs(data);
+    renderVolumeChart(data);
+    renderSentimentChart(data);
+    renderPriorityChart(data);
+    renderChannelChart(data);
+    renderIssueChart(data);
+    renderTable(data);
+  } catch(e) {
+    document.getElementById('last-updated').textContent = 'Error loading data — retrying in 30s';
+    console.error(e);
+  }
+}
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
