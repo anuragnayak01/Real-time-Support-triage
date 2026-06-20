@@ -8,7 +8,7 @@ python-dotenv
 crewai 
 llama-index-core
 llama-index-vector-stores-chroma
-llama-index-embeddings-huggingface
+llama-index-embeddings-fastembed
 chromadb
 pandas
 aiofiles
