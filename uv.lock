@@ -1,4 +1,7 @@
 pip install uv
-uv venv
-uv pip install -r requirements.txt
-uv lock --no-sources
+
+# 3. Create pyproject.toml (uv needs this)
+uv init --no-package
+
+# 4. Generate the real lockfile from your requirements.txt
+uv add $(grep -v "^#\|^$" requirements.txt | tr '\n' ' ')
