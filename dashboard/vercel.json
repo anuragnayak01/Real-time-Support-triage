@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/tickets/:path*",
+      "destination": "https://insightpulse-2vvm.onrender.com/tickets/:path*"
+    },
+    {
+      "source": "/triage",
+      "destination": "https://insightpulse-2vvm.onrender.com/triage"
+    }
+  ]
+}
