@@ -1,96 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Support Triager Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; min-height: 100vh; }
-  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; }
-  .sub { color: #94a3b8; font-size: 0.82rem; margin-bottom: 24px; }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Support Triager</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-  .kpi { background: #1e293b; border-radius: 12px; padding: 18px 20px; }
-  .kpi-label { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
-  .kpi-value { font-size: 2rem; font-weight: 700; }
-  .kpi-value.red    { color: #ef4444; }
-  .kpi-value.amber  { color: #f59e0b; }
-  .kpi-value.muted  { color: #e2e8f0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: #030712;
+      color: #f9fafb;
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
-  .charts-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .chart-box { background: #1e293b; border-radius: 12px; padding: 16px 18px; }
-  .chart-box h3 { font-size: 0.82rem; color: #94a3b8; margin-bottom: 12px; font-weight: 500; }
+    /* ─── Sidebar (dashboard.tremor.so style) ─── */
+    .sidebar {
+      width: 220px;
+      background: #030712;
+      border-right: 1px solid #1a2332;
+      padding: 20px 12px 20px;
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      flex-shrink: 0;
+    }
 
-  .full-box { background: #1e293b; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
-  .full-box h3 { font-size: 0.82rem; color: #94a3b8; margin-bottom: 12px; font-weight: 500; }
+    .sb-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 4px 8px; margin-bottom: 28px;
+    }
+    .sb-icon {
+      width: 30px; height: 30px;
+      background: #4f46e5; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .sb-name { font-size: 13.5px; font-weight: 600; color: #f9fafb; }
+    .sb-role {
+      font-size: 10px; color: #4b5563;
+      background: #0f172a; border: 1px solid #1a2332;
+      border-radius: 4px; padding: 1px 7px; display: inline-block; margin-top: 2px;
+    }
 
-  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-  th { color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; text-align: left; border-bottom: 1px solid #334155; font-weight: 500; }
-  td { padding: 9px 10px; border-bottom: 1px solid #1e293b; vertical-align: top; color: #cbd5e1; }
-  tr:hover td { background: #263045; }
-  td.mono { font-family: monospace; color: #64748b; font-size: 0.75rem; }
-  td.msg { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sb-section { margin-bottom: 22px; }
+    .sb-section-label {
+      font-size: 10.5px; font-weight: 500; color: #374151;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0 8px; margin-bottom: 3px;
+    }
+    .sb-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 8px; border-radius: 6px;
+      color: #6b7280; font-size: 13px;
+      cursor: pointer; transition: all 0.12s;
+      text-decoration: none;
+    }
+    .sb-link:hover { background: #0f172a; color: #e5e7eb; }
+    .sb-link.active { background: #0f172a; color: #f9fafb; }
+    .sb-link svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.8; }
 
-  .badge { display: inline-block; padding: 2px 9px; border-radius: 9999px; font-size: 0.68rem; font-weight: 600; }
-  .Critical { background: #fef2f2; color: #dc2626; }
-  .High     { background: #fffbeb; color: #d97706; }
-  .Low      { background: #f0fdf4; color: #16a34a; }
+    .sb-footer {
+      margin-top: auto;
+      padding: 14px 8px 0;
+      border-top: 1px solid #1a2332;
+    }
+    .sb-footer-label { font-size: 10.5px; color: #374151; margin-bottom: 2px; }
+    .sb-footer-time  { font-size: 11.5px; color: #4b5563; font-variant-numeric: tabular-nums; }
 
-  .empty { text-align: center; padding: 40px; color: #475569; }
+    /* ─── Main ─── */
+    .main {
+      margin-left: 220px;
+      flex: 1;
+      padding: 28px 28px 48px;
+      min-width: 0;
+    }
 
-  @media (max-width: 700px) {
-    .kpi-row   { grid-template-columns: 1fr 1fr; }
-    .charts-2  { grid-template-columns: 1fr; }
-  }
-</style>
+    /* ─── Page header (overview.tremor.so/support style) ─── */
+    .page-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .page-title { font-size: 20px; font-weight: 600; color: #f9fafb; margin-bottom: 3px; }
+    .page-sub   { font-size: 13px; color: #4b5563; }
+    .head-right { display: flex; align-items: center; gap: 8px; }
+
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: #0f172a; border: 1px solid #1a2332;
+      border-radius: 6px; padding: 6px 12px;
+      font-size: 12px; color: #6b7280;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: #22c55e; border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .btn-action {
+      background: #4f46e5; color: #fff;
+      border: none; border-radius: 6px;
+      padding: 7px 14px; font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.12s;
+    }
+    .btn-action:hover { background: #4338ca; }
+
+    /* ─── KPI row (dashboard.tremor.so/overview metric style) ─── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .kpi {
+      background: #0b1120; border: 1px solid #1a2332;
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .kpi-label { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+    .kpi-val   { font-size: 26px; font-weight: 700; color: #f9fafb; line-height: 1.1; margin-bottom: 5px; }
+    .kpi-val.red   { color: #ef4444; }
+    .kpi-val.amber { color: #f59e0b; }
+    .kpi-sub { font-size: 11.5px; color: #374151; }
+
+    /* ─── Status row (overview.tremor.so/support style: tickets | ring | volume) ─── */
+    .status-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.6fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .card {
+      background: #0b1120; border: 1px solid #1a2332;
+      border-radius: 10px; padding: 18px 20px;
+    }
+    .card-label {
+      font-size: 11px; font-weight: 500; color: #374151;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 12px;
+    }
+
+    /* Current tickets card */
+    .big-count { font-size: 44px; font-weight: 700; color: #f9fafb; line-height: 1; margin-bottom: 18px; }
+
+    .bkd-item { margin-bottom: 9px; }
+    .bkd-row  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .bkd-name { font-size: 12.5px; color: #9ca3af; }
+    .bkd-pct  { font-size: 12.5px; font-weight: 500; color: #f9fafb; }
+    .pbar { height: 3px; background: #1a2332; border-radius: 9999px; overflow: hidden; }
+    .pbar-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+
+    /* Volume card */
+    .vol-nums { display: flex; gap: 22px; margin-bottom: 10px; }
+    .vol-n { font-size: 24px; font-weight: 700; color: #f9fafb; line-height: 1; }
+    .vol-l { font-size: 11px; color: #4b5563; margin-top: 3px; }
+
+    /* ─── Charts row ─── */
+    .charts-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .chart-card {
+      background: #0b1120; border: 1px solid #1a2332;
+      border-radius: 10px; padding: 18px 20px;
+    }
+    .chart-title { font-size: 13.5px; font-weight: 500; color: #e5e7eb; margin-bottom: 14px; }
+
+    /* ─── Ticket table (overview.tremor.so/support table style) ─── */
+    .table-wrap {
+      background: #0b1120; border: 1px solid #1a2332;
+      border-radius: 10px; overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .table-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid #1a2332;
+    }
+    .table-title { font-size: 13.5px; font-weight: 500; color: #e5e7eb; }
+    .table-sub   { font-size: 12px; color: #374151; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    thead th {
+      background: #060d1a; color: #374151;
+      font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      padding: 9px 14px; text-align: left;
+      border-bottom: 1px solid #1a2332;
+    }
+    tbody td {
+      padding: 11px 14px; color: #d1d5db;
+      border-bottom: 1px solid #0f1929;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #0a1525; }
+
+    td.mono { font-family: 'SF Mono', Consolas, monospace; font-size: 11px; color: #374151; }
+    td.msg  { max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .badge {
+      display: inline-block; padding: 2px 9px;
+      border-radius: 9999px; font-size: 11px; font-weight: 600;
+    }
+    .badge-Critical { background: #450a0a; color: #fca5a5; }
+    .badge-High     { background: #431407; color: #fdba74; }
+    .badge-Low      { background: #052e16; color: #86efac; }
+
+    .sent-wrap { display: inline-flex; align-items: center; gap: 5px; }
+    .sent-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Pagination (overview.tremor.so/support: "Showing 1-16 of 100 / Previous page / Next page") */
+    .pager {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 1px solid #1a2332;
+    }
+    .pager-info { font-size: 12.5px; color: #4b5563; }
+    .pager-btns { display: flex; gap: 6px; }
+    .pager-btn {
+      background: #0f172a; border: 1px solid #1a2332;
+      border-radius: 6px; padding: 5px 13px;
+      font-size: 12.5px; color: #9ca3af;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.12s;
+    }
+    .pager-btn:hover:not(:disabled) { background: #1a2332; color: #f9fafb; }
+    .pager-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ─── Divider label (dashboard.tremor.so section header style) ─── */
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px; margin-top: 4px;
+    }
+    .section-head-title { font-size: 13px; font-weight: 500; color: #6b7280; }
+  </style>
 </head>
 <body>
 
-<h1>Real-Time Support Triager</h1>
-<p class="sub" id="last-updated">Loading...</p>
+<!-- ═══ Sidebar ═══ -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-icon">ST</div>
+    <div>
+      <div class="sb-name">Support Triager</div>
+      <span class="sb-role">Live dashboard</span>
+    </div>
+  </div>
 
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-label">Total tickets</div><div class="kpi-value muted" id="k-total">—</div></div>
-  <div class="kpi"><div class="kpi-label">Critical</div><div class="kpi-value red" id="k-critical">—</div></div>
-  <div class="kpi"><div class="kpi-label">Negative sentiment</div><div class="kpi-value amber" id="k-negative">—</div></div>
-  <div class="kpi"><div class="kpi-label">Avg sentiment score</div><div class="kpi-value muted" id="k-score">—</div></div>
-</div>
+  <div class="sb-section">
+    <div class="sb-section-label">Overview</div>
+    <a class="sb-link active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Dashboard
+    </a>
+    <a class="sb-link" href="#ticket-table">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 000 4h6a2 2 0 000-4M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      Tickets
+    </a>
+    <a class="sb-link" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+      </svg>
+      Analytics
+    </a>
+  </div>
 
-<div class="charts-2">
-  <div class="chart-box"><h3>Volume over time</h3><div id="chart-vol" style="height:220px;"></div></div>
-  <div class="chart-box"><h3>Sentiment breakdown</h3><div id="chart-sent" style="height:220px;"></div></div>
-</div>
+  <div class="sb-section">
+    <div class="sb-section-label">Shortcuts</div>
+    <a class="sb-link" href="#chart-volume">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      Volume trends
+    </a>
+    <a class="sb-link" href="#chart-sentiment">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+      </svg>
+      Sentiment
+    </a>
+    <a class="sb-link" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+      </svg>
+      Settings
+    </a>
+  </div>
 
-<div class="charts-2">
-  <div class="chart-box"><h3>Priority distribution</h3><div id="chart-pri" style="height:200px;"></div></div>
-  <div class="chart-box"><h3>Channel breakdown</h3><div id="chart-ch" style="height:200px;"></div></div>
-</div>
+  <div class="sb-footer">
+    <div class="sb-footer-label">Auto-refreshes every 30s</div>
+    <div class="sb-footer-time" id="last-refresh">—</div>
+  </div>
+</nav>
 
-<div class="full-box">
-  <h3>Top issue types</h3>
-  <div id="chart-issue" style="height:200px;"></div>
-</div>
+<!-- ═══ Main ═══ -->
+<main class="main">
 
-<div class="full-box">
-  <h3>Latest tickets</h3>
-  <div id="table-wrap"></div>
-</div>
+  <!-- Page header -->
+  <div class="page-head">
+    <div>
+      <div class="page-title">Support Dashboard</div>
+      <div class="page-sub">Real-time monitoring of support metrics</div>
+    </div>
+    <div class="head-right">
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        Live
+      </div>
+      <button class="btn-action" onclick="refresh()">Refresh now</button>
+    </div>
+  </div>
+
+  <!-- ── KPI cards ── -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Total tickets</div>
+      <div class="kpi-val" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-total-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Critical</div>
+      <div class="kpi-val red" id="kpi-critical">—</div>
+      <div class="kpi-sub" id="kpi-crit-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Negative sentiment</div>
+      <div class="kpi-val amber" id="kpi-negative">—</div>
+      <div class="kpi-sub" id="kpi-neg-sub">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Avg sentiment score</div>
+      <div class="kpi-val" id="kpi-score">—</div>
+      <div class="kpi-sub" id="kpi-score-sub">—</div>
+    </div>
+  </div>
+
+  <!-- ── Status cards: tickets | priority ring | volume ── -->
+  <div class="status-row">
+
+    <!-- Current Tickets (like overview.tremor.so/support) -->
+    <div class="card">
+      <div class="card-label">Current tickets</div>
+      <div class="big-count" id="stat-total">—</div>
+      <div id="breakdown-wrap"></div>
+    </div>
+
+    <!-- Priority ring (like SLA Performance ring) -->
+    <div class="card" style="display:flex;flex-direction:column;">
+      <div class="card-label">Priority distribution</div>
+      <div id="chart-priority" style="flex:1;min-height:150px;"></div>
+    </div>
+
+    <!-- Volume trends (like Call Volume Trends) -->
+    <div class="card">
+      <div class="card-label">Volume trends</div>
+      <div class="vol-nums">
+        <div>
+          <div class="vol-n" id="vol-today">—</div>
+          <div class="vol-l">Today</div>
+        </div>
+        <div>
+          <div class="vol-n" id="vol-yesterday">—</div>
+          <div class="vol-l">Yesterday</div>
+        </div>
+      </div>
+      <div id="chart-volume" style="height:110px;" id="chart-volume"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Sentiment + Channel charts ── -->
+  <div class="section-head">
+    <span class="section-head-title">Sentiment &amp; Channel</span>
+  </div>
+  <div class="charts-2" id="chart-sentiment-section">
+    <div class="chart-card" id="chart-sentiment-card">
+      <div class="chart-title">Sentiment breakdown</div>
+      <div id="chart-sentiment" style="height:210px;"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Channel breakdown</div>
+      <div id="chart-channel" style="height:210px;"></div>
+    </div>
+  </div>
+
+  <!-- ── Issue types ── -->
+  <div class="chart-card" style="margin-bottom:14px;">
+    <div class="chart-title">Top issue types</div>
+    <div id="chart-issue" style="height:190px;"></div>
+  </div>
+
+  <!-- ── Ticket table ── -->
+  <div class="table-wrap" id="ticket-table">
+    <div class="table-topbar">
+      <div class="table-title">Latest tickets</div>
+      <div class="table-sub" id="table-range">Showing —</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Created at</th>
+          <th>Channel</th>
+          <th>Priority</th>
+          <th>Sentiment</th>
+          <th>Issue type</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody id="ticket-tbody"></tbody>
+    </table>
+
+    <div class="pager">
+      <div class="pager-info" id="pager-info">—</div>
+      <div class="pager-btns">
+        <button class="pager-btn" id="btn-prev" onclick="changePage(-1)" disabled>Previous page</button>
+        <button class="pager-btn" id="btn-next" onclick="changePage(1)">Next page</button>
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <script>
-const PLOTLY_BASE = {
+const PER_PAGE = 15;
+let allTickets = [];
+let page = 1;
+
+const DARK = {
   paper_bgcolor: 'transparent',
   plot_bgcolor:  'transparent',
-  font:   { color: '#94a3b8', size: 11, family: 'system-ui, sans-serif' },
-  margin: { t: 10, b: 36, l: 40, r: 10 },
-  colorway: ['#6366f1','#1D9E75','#f59e0b','#ef4444','#06b6d4'],
+  font: { color: '#4b5563', size: 11, family: 'system-ui, -apple-system, sans-serif' },
+  colorway: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4','#d946ef'],
 };
+const CFG = { responsive: true, displayModeBar: false };
 
 function floorHour(ts) {
   const d = new Date(ts);
-  d.setMinutes(0, 0, 0);
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  d.setMinutes(0,0,0);
+  return d.toISOString();
+}
+
+function fmtTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString() + ', ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 }
 
 function fmtScore(v) {
@@ -99,173 +473,247 @@ function fmtScore(v) {
   return (n >= 0 ? '+' : '') + n.toFixed(2);
 }
 
-function fmtTime(ts) {
-  if (!ts) return '—';
-  const d = new Date(ts);
-  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const SENT_COLORS = {
+  positive:       '#22c55e',
+  neutral:        '#6b7280',
+  negative:       '#f59e0b',
+  highly_negative:'#ef4444',
+};
+
+function sentCell(s) {
+  const c = SENT_COLORS[s] || '#6b7280';
+  return `<span class="sent-wrap"><span class="sent-dot" style="background:${c};"></span>${s || '—'}</span>`;
 }
 
+function priBadge(p) {
+  return `<span class="badge badge-${p}">${p || '—'}</span>`;
+}
+
+/* ── KPI row ── */
 function renderKPIs(data) {
   const total    = data.length;
   const critical = data.filter(t => t.priority === 'Critical').length;
   const negative = data.filter(t => ['negative','highly_negative'].includes(t.sentiment)).length;
   const scores   = data.map(t => parseFloat(t.sentiment_score)).filter(n => !isNaN(n));
-  const avg      = scores.length ? (scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+  const avg      = scores.length ? scores.reduce((a,b) => a+b, 0) / scores.length : 0;
 
-  document.getElementById('k-total').textContent    = total;
-  document.getElementById('k-critical').textContent = critical;
-  document.getElementById('k-negative').textContent = negative;
-  document.getElementById('k-score').textContent    = fmtScore(avg);
+  document.getElementById('kpi-total').textContent    = total;
+  document.getElementById('kpi-critical').textContent = critical;
+  document.getElementById('kpi-negative').textContent = negative;
+  document.getElementById('kpi-score').textContent    = fmtScore(avg);
+
+  document.getElementById('kpi-total-sub').textContent    = `${critical} critical · ${total-critical} others`;
+  document.getElementById('kpi-crit-sub').textContent     = `${total ? Math.round(critical/total*100) : 0}% of all tickets`;
+  document.getElementById('kpi-neg-sub').textContent      = `${total ? Math.round(negative/total*100) : 0}% negative rate`;
+  document.getElementById('kpi-score-sub').textContent    = avg >= 0 ? 'Positive average' : 'Negative average';
 }
 
+/* ── Status cards ── */
+function renderStatusCards(data) {
+  const total    = data.length;
+  const critical = data.filter(t => t.priority === 'Critical').length;
+  const high     = data.filter(t => t.priority === 'High').length;
+  const low      = data.filter(t => t.priority === 'Low').length;
+
+  document.getElementById('stat-total').textContent = total;
+
+  const items = [
+    { label:'Critical', count:critical, color:'#ef4444' },
+    { label:'High',     count:high,     color:'#f59e0b' },
+    { label:'Low',      count:low,      color:'#22c55e' },
+  ];
+
+  document.getElementById('breakdown-wrap').innerHTML = items.map(it => {
+    const pct = total ? Math.round(it.count / total * 100) : 0;
+    return `
+      <div class="bkd-item">
+        <div class="bkd-row">
+          <span class="bkd-name">${it.label}</span>
+          <span class="bkd-pct">${pct}%</span>
+        </div>
+        <div class="pbar">
+          <div class="pbar-fill" style="width:${pct}%; background:${it.color};"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  /* Volume: today vs yesterday */
+  const todayStr     = new Date().toDateString();
+  const yesterdayStr = new Date(Date.now() - 864e5).toDateString();
+  const tCount = data.filter(t => new Date(t.timestamp).toDateString() === todayStr).length;
+  const yCount = data.filter(t => new Date(t.timestamp).toDateString() === yesterdayStr).length;
+  document.getElementById('vol-today').textContent     = tCount;
+  document.getElementById('vol-yesterday').textContent = yCount;
+}
+
+/* ── Volume sparkline ── */
 function renderVolumeChart(data) {
-  const counts = {};
+  const hourMap = {};
   data.forEach(t => {
     const h = floorHour(t.timestamp);
-    counts[h] = (counts[h] || 0) + 1;
+    hourMap[h] = (hourMap[h] || 0) + 1;
   });
-  const hours = Object.keys(counts).sort();
-  Plotly.react('chart-vol', [{
-    x: hours, y: hours.map(h => counts[h]),
-    type: 'scatter', mode: 'lines+markers',
-    line: { color: '#6366f1', width: 2 },
-    marker: { color: '#6366f1', size: 6 },
-    fill: 'tozeroy', fillcolor: 'rgba(99,102,241,0.08)',
-    hovertemplate: '%{x}<br>%{y} tickets<extra></extra>'
+  const hours = Object.keys(hourMap).sort();
+  Plotly.react('chart-volume', [{
+    x: hours, y: hours.map(h => hourMap[h]),
+    type:'scatter', mode:'lines',
+    line: { color:'#6366f1', width:2 },
+    fill: 'tozeroy', fillcolor: 'rgba(99,102,241,0.10)',
+    hovertemplate: '%{x|%H:%M}<br>%{y} tickets<extra></extra>',
   }], {
-    ...PLOTLY_BASE,
-    xaxis: { color: '#64748b', showgrid: false },
-    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' }
-  }, { responsive: true, displayModeBar: false });
+    ...DARK,
+    margin:  { t:4, b:4, l:0, r:0 },
+    height:  110,
+    xaxis:   { visible:false },
+    yaxis:   { visible:false },
+    showlegend: false,
+  }, CFG);
 }
 
+/* ── Priority donut (like SLA ring) ── */
+function renderPriorityChart(data) {
+  const counts = { Critical:0, High:0, Low:0 };
+  data.forEach(t => { if (counts[t.priority] !== undefined) counts[t.priority]++; });
+
+  Plotly.react('chart-priority', [{
+    labels: ['Critical','High','Low'],
+    values: [counts.Critical, counts.High, counts.Low],
+    type:   'pie', hole: 0.58,
+    marker: { colors:['#ef4444','#f59e0b','#22c55e'], line:{color:'#0b1120',width:2} },
+    textinfo: 'none',
+    hovertemplate: '%{label}: %{value} (%{percent})<extra></extra>',
+  }], {
+    ...DARK,
+    margin:     { t:0, b:0, l:0, r:0 },
+    showlegend: true,
+    legend: {
+      orientation: 'v', x:0.72, y:0.45,
+      font: { color:'#6b7280', size:11 },
+    },
+  }, CFG);
+}
+
+/* ── Sentiment donut ── */
 function renderSentimentChart(data) {
   const map = {};
-  data.forEach(t => map[t.sentiment] = (map[t.sentiment] || 0) + 1);
-  const colors = { positive: '#22c55e', neutral: '#64748b', negative: '#f59e0b', highly_negative: '#ef4444' };
+  data.forEach(t => map[t.sentiment] = (map[t.sentiment]||0)+1);
   const labels = Object.keys(map);
-  Plotly.react('chart-sent', [{
+  Plotly.react('chart-sentiment', [{
     labels, values: labels.map(l => map[l]),
-    type: 'pie', hole: 0.5,
-    marker: { colors: labels.map(l => colors[l] || '#6366f1') },
+    type:'pie', hole:0.5,
+    marker: { colors: labels.map(l => SENT_COLORS[l]||'#6366f1'), line:{color:'#0b1120',width:2} },
     textinfo: 'label+percent',
-    textfont: { color: '#e2e8f0', size: 11 },
-    hovertemplate: '%{label}<br>%{value} tickets<extra></extra>'
-  }], { ...PLOTLY_BASE, showlegend: false }, { responsive: true, displayModeBar: false });
-}
-
-function renderPriorityChart(data) {
-  const order  = ['Critical','High','Low'];
-  const colors = { Critical: '#ef4444', High: '#f59e0b', Low: '#22c55e' };
-  const counts = { Critical: 0, High: 0, Low: 0 };
-  data.forEach(t => { if (counts[t.priority] !== undefined) counts[t.priority]++; });
-  Plotly.react('chart-pri', [{
-    x: order, y: order.map(p => counts[p]),
-    type: 'bar',
-    marker: { color: order.map(p => colors[p]) },
-    text: order.map(p => counts[p]),
-    textposition: 'outside',
-    textfont: { color: '#e2e8f0' },
-    hovertemplate: '%{x}: %{y}<extra></extra>'
+    textfont: { color:'#e5e7eb', size:10.5 },
+    hovertemplate: '%{label}: %{value}<extra></extra>',
   }], {
-    ...PLOTLY_BASE,
-    xaxis: { color: '#64748b', showgrid: false },
-    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' },
-    showlegend: false
-  }, { responsive: true, displayModeBar: false });
+    ...DARK,
+    margin:     { t:10, b:10, l:10, r:10 },
+    height:     210,
+    showlegend: false,
+  }, CFG);
 }
 
+/* ── Channel bar ── */
 function renderChannelChart(data) {
   const map = {};
-  data.forEach(t => map[t.channel] = (map[t.channel] || 0) + 1);
-  const channels = Object.keys(map).sort();
-  const clrs = ['#6366f1','#1D9E75','#f59e0b','#06b6d4'];
-  Plotly.react('chart-ch', [{
-    x: channels, y: channels.map(c => map[c]),
+  data.forEach(t => map[t.channel] = (map[t.channel]||0)+1);
+  const chs = Object.keys(map).sort();
+  Plotly.react('chart-channel', [{
+    x: chs, y: chs.map(c => map[c]),
     type: 'bar',
-    marker: { color: clrs },
-    text: channels.map(c => map[c]),
+    marker: { color:['#6366f1','#1D9E75','#f59e0b','#06b6d4','#d946ef'] },
+    text: chs.map(c => map[c]),
     textposition: 'outside',
-    textfont: { color: '#e2e8f0' },
-    hovertemplate: '%{x}: %{y}<extra></extra>'
+    textfont: { color:'#9ca3af', size:11 },
+    hovertemplate: '%{x}: %{y}<extra></extra>',
   }], {
-    ...PLOTLY_BASE,
-    xaxis: { color: '#64748b', showgrid: false },
-    yaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1, rangemode: 'tozero' },
-    showlegend: false
-  }, { responsive: true, displayModeBar: false });
+    ...DARK,
+    height:     210,
+    margin:     { t:10, b:36, l:30, r:10 },
+    xaxis:      { color:'#374151', showgrid:false, zeroline:false },
+    yaxis:      { color:'#374151', gridcolor:'#1a2332', rangemode:'tozero' },
+    showlegend: false,
+  }, CFG);
 }
 
+/* ── Issue types horizontal bar ── */
 function renderIssueChart(data) {
   const map = {};
-  data.forEach(t => { if (t.issue_type) map[t.issue_type] = (map[t.issue_type] || 0) + 1; });
+  data.forEach(t => { if (t.issue_type) map[t.issue_type] = (map[t.issue_type]||0)+1; });
   const sorted = Object.entries(map).sort((a,b) => a[1]-b[1]).slice(-8);
   Plotly.react('chart-issue', [{
     y: sorted.map(e => e[0]),
     x: sorted.map(e => e[1]),
     type: 'bar', orientation: 'h',
-    marker: { color: sorted.map((_,i) => `hsl(${240 - i*18},60%,${55+i*3}%)`), },
-    hovertemplate: '%{y}: %{x}<extra></extra>'
+    marker: { color: sorted.map((_,i) => `hsl(${238-i*14},58%,${54+i*3}%)`) },
+    hovertemplate: '%{y}: %{x}<extra></extra>',
   }], {
-    ...PLOTLY_BASE,
-    margin: { t: 10, b: 30, l: 110, r: 30 },
-    xaxis: { color: '#64748b', gridcolor: 'rgba(255,255,255,0.06)', dtick: 1 },
-    yaxis: { color: '#94a3b8', showgrid: false },
-    showlegend: false
-  }, { responsive: true, displayModeBar: false });
+    ...DARK,
+    height: 190,
+    margin: { t:8, b:28, l:120, r:20 },
+    xaxis:  { color:'#374151', gridcolor:'#1a2332', zeroline:false },
+    yaxis:  { color:'#6b7280', showgrid:false },
+    showlegend: false,
+  }, CFG);
 }
 
-function renderTable(data) {
-  const wrap = document.getElementById('table-wrap');
-  if (!data.length) {
-    wrap.innerHTML = '<p class="empty">No tickets yet. POST a message to /triage to get started.</p>';
-    return;
-  }
-  const priEmoji = { Critical: '🔴', High: '🟠', Low: '🟢' };
-  const rows = data.slice(0, 20).map(t => `
+/* ── Table + pagination ── */
+function renderTable() {
+  const start = (page - 1) * PER_PAGE;
+  const end   = Math.min(start + PER_PAGE, allTickets.length);
+  const slice = allTickets.slice(start, end);
+  const total = allTickets.length;
+
+  const rangeText = `Showing ${start+1}–${end} of ${total}`;
+  document.getElementById('table-range').textContent = rangeText;
+  document.getElementById('pager-info').textContent  = rangeText;
+  document.getElementById('btn-prev').disabled = (page === 1);
+  document.getElementById('btn-next').disabled = (end >= total);
+
+  document.getElementById('ticket-tbody').innerHTML = slice.map(t => `
     <tr>
       <td class="mono">${t.ticket_id || '—'}</td>
-      <td style="white-space:nowrap; color:#64748b; font-size:0.75rem;">${fmtTime(t.timestamp)}</td>
-      <td>${t.channel || '—'}</td>
-      <td><span class="badge ${t.priority}">${priEmoji[t.priority] || ''} ${t.priority}</span></td>
-      <td>${t.sentiment || '—'}</td>
-      <td>${t.issue_type || '—'}</td>
-      <td class="msg" title="${(t.message||'').replace(/"/g,"'")}">
-        ${(t.message||'').slice(0,80)}${(t.message||'').length > 80 ? '…' : ''}
-      </td>
+      <td style="white-space:nowrap; color:#4b5563; font-size:12px;">${fmtTime(t.timestamp)}</td>
+      <td style="color:#9ca3af;">${t.channel || '—'}</td>
+      <td>${priBadge(t.priority)}</td>
+      <td>${sentCell(t.sentiment)}</td>
+      <td style="color:#9ca3af;">${t.issue_type || '—'}</td>
+      <td class="msg" title="${(t.message||'').replace(/"/g,"'")}">${(t.message||'').slice(0,72)}${(t.message||'').length>72?'…':''}</td>
     </tr>`).join('');
-
-  wrap.innerHTML = `
-    <table>
-      <thead><tr>
-        <th>Ticket ID</th><th>Time</th><th>Channel</th>
-        <th>Priority</th><th>Sentiment</th><th>Issue type</th><th>Message</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
 }
 
+function changePage(dir) {
+  page += dir;
+  renderTable();
+  window.scrollTo({ top: document.getElementById('ticket-table').offsetTop - 20, behavior:'smooth' });
+}
+
+/* ── Main refresh ── */
 async function refresh() {
   try {
     const res  = await fetch('/tickets/recent?limit=200');
-    const data = await res.json();
-    document.getElementById('last-updated').textContent =
-      'Auto-refreshes every 30s · Last updated: ' + new Date().toLocaleTimeString();
-    renderKPIs(data);
-    renderVolumeChart(data);
-    renderSentimentChart(data);
-    renderPriorityChart(data);
-    renderChannelChart(data);
-    renderIssueChart(data);
-    renderTable(data);
+    allTickets = await res.json();
+    page = 1;
+
+    document.getElementById('last-refresh').textContent =
+      'Updated ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+    renderKPIs(allTickets);
+    renderStatusCards(allTickets);
+    renderVolumeChart(allTickets);
+    renderPriorityChart(allTickets);
+    renderSentimentChart(allTickets);
+    renderChannelChart(allTickets);
+    renderIssueChart(allTickets);
+    renderTable();
   } catch(e) {
-    document.getElementById('last-updated').textContent = 'Error loading data — retrying in 30s';
+    document.getElementById('last-refresh').textContent = 'Error — retrying in 30s';
     console.error(e);
   }
 }
 
 refresh();
-setInterval(refresh, 30000);
+setInterval(refresh, 30_000);
 </script>
 </body>
 </html>
