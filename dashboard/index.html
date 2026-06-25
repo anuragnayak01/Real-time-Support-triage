@@ -207,6 +207,130 @@
     .pager-btn { background: #0f172a; border: 1px solid #1a2332; border-radius: 6px; padding: 5px 13px; font-size: 12.5px; color: #9ca3af; cursor: pointer; font-family: inherit; transition: all 0.12s; }
     .pager-btn:hover:not(:disabled) { background: #1a2332; color: #f9fafb; }
     .pager-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ─── Live Demo Panel ─── */
+    .demo-panel {
+      background: #0b1120;
+      border: 1px solid #2d3f55;
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .demo-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4f46e5, #06b6d4, #22c55e);
+    }
+    .demo-head-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+    .demo-title { font-size: 14px; font-weight: 600; color: #f9fafb; margin-bottom: 3px; }
+    .demo-sub   { font-size: 12px; color: #4b5563; }
+    .demo-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; background: #0f172a; border: 1px solid #1a2332; border-radius: 6px; padding: 4px 10px; color: #4b5563; }
+    .demo-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #4f46e5; }
+
+    .demo-input-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 12px; }
+    .demo-textarea {
+      background: #060d1a; border: 1px solid #1a2332;
+      border-radius: 8px; padding: 11px 14px;
+      font-family: inherit; font-size: 13px; color: #e5e7eb;
+      resize: none; outline: none; height: 72px;
+      transition: border-color 0.15s;
+      line-height: 1.5;
+    }
+    .demo-textarea::placeholder { color: #1f2937; }
+    .demo-textarea:focus { border-color: #4f46e5; }
+
+    .demo-right-col { display: flex; flex-direction: column; gap: 8px; min-width: 148px; }
+    .demo-channel {
+      background: #060d1a; border: 1px solid #1a2332;
+      border-radius: 7px; padding: 7px 10px;
+      font-family: inherit; font-size: 12.5px; color: #9ca3af;
+      outline: none; cursor: pointer;
+    }
+    .demo-channel:focus { border-color: #4f46e5; }
+    .demo-send {
+      background: #4f46e5; color: #fff;
+      border: none; border-radius: 7px;
+      padding: 0 16px; font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      flex: 1; transition: background 0.12s;
+      min-height: 36px;
+    }
+    .demo-send:hover:not(:disabled) { background: #4338ca; }
+    .demo-send:disabled { opacity: 0.5; cursor: not-allowed; }
+    .demo-send svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .demo-examples { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .demo-ex-label { font-size: 11px; color: #374151; flex-shrink: 0; }
+    .demo-ex-btn {
+      font-size: 11.5px; color: #4b5563;
+      background: #060d1a; border: 1px solid #1a2332;
+      border-radius: 5px; padding: 3px 10px;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.12s;
+    }
+    .demo-ex-btn:hover { border-color: #4f46e5; color: #818cf8; }
+
+    /* Pipeline flow */
+    .pipeline { display: flex; align-items: center; gap: 0; margin-bottom: 18px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+    .pipe-step {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: #060d1a; border: 1px solid #1a2332;
+      border-radius: 10px; padding: 12px 14px;
+      min-width: 108px; text-align: center;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .pipe-step-icon { font-size: 20px; line-height: 1; filter: grayscale(1) opacity(0.3); transition: filter 0.3s; }
+    .pipe-step-label { font-size: 11px; color: #374151; font-weight: 500; transition: color 0.3s; white-space: nowrap; }
+    .pipe-step-detail { font-size: 10px; color: #1f2937; transition: color 0.3s; }
+
+    .pipe-step.active {
+      border-color: #4f46e5;
+      background: #0c0f2a;
+      box-shadow: 0 0 0 1px #4f46e5, 0 0 16px rgba(79,70,229,0.2);
+    }
+    .pipe-step.active .pipe-step-icon { filter: none; animation: pulse-icon 0.8s ease-in-out infinite alternate; }
+    .pipe-step.active .pipe-step-label { color: #818cf8; }
+    .pipe-step.active .pipe-step-detail { color: #4b5563; }
+
+    .pipe-step.done { border-color: #166534; background: #052e16; }
+    .pipe-step.done .pipe-step-icon { filter: none; animation: none; }
+    .pipe-step.done .pipe-step-label { color: #4ade80; }
+    .pipe-step.done .pipe-step-detail { color: #166534; }
+
+    @keyframes pulse-icon { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+    .pipe-arrow { font-size: 16px; color: #1a2332; padding: 0 6px; flex-shrink: 0; transition: color 0.3s; }
+    .pipe-arrow.lit { color: #4f46e5; }
+    .pipe-arrow.done { color: #166534; }
+
+    /* Result card */
+    .demo-result {
+      background: #052e16; border: 1px solid #166534;
+      border-radius: 10px; padding: 16px 20px;
+      animation: slideUp 0.3s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .demo-result.error { background: #450a0a; border-color: #7f1d1d; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .result-icon { font-size: 18px; }
+    .result-title { font-size: 13.5px; font-weight: 600; color: #4ade80; }
+    .result-title.err { color: #f87171; }
+    .result-id { font-family: 'SF Mono', Consolas, monospace; font-size: 11px; color: #166534; margin-left: auto; }
+    .result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
+    .result-field { background: #030712; border-radius: 7px; padding: 9px 12px; }
+    .result-field-label { font-size: 10.5px; color: #374151; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .result-field-val { font-size: 14px; font-weight: 600; color: #f9fafb; }
+    .result-field-val.red   { color: #fca5a5; }
+    .result-field-val.amber { color: #fdba74; }
+    .result-field-val.green { color: #86efac; }
+    .result-msg { font-size: 12.5px; color: #4b5563; font-style: italic; background: #030712; border-radius: 7px; padding: 9px 12px; border-left: 3px solid #166534; }
+    .result-refresh-note { font-size: 11.5px; color: #166534; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
   </style>
 </head>
 <body>
@@ -237,6 +361,7 @@
   </div>
   <div class="sb-section">
     <div class="sb-section-label">Shortcuts</div>
+    <a class="sb-link" href="#demo-section"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Live demo</a>
     <a class="sb-link" href="#chart-volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Volume trends</a>
     <a class="sb-link" href="#chart-sentiment-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>Sentiment</a>
 
@@ -259,6 +384,86 @@
       <div class="live-badge"><span class="live-dot"></span>Live</div>
       <button class="btn-action" onclick="refresh()">Refresh now</button>
     </div>
+  </div>
+
+  <!-- ══ Live Demo Panel ══ -->
+  <div class="demo-panel" id="demo-section">
+
+    <div class="demo-head-row">
+      <div>
+        <div class="demo-title">🎯 Live Message Triage Demo</div>
+        <div class="demo-sub">Type a support message → watch the AI classify it in real-time → see it appear in the dashboard</div>
+      </div>
+      <div class="demo-badge"><span class="demo-badge-dot"></span>POST /triage</div>
+    </div>
+
+    <div class="demo-input-row">
+      <textarea class="demo-textarea" id="demo-msg" placeholder="Type a support message… e.g. I can't log into my account and I have an urgent meeting in 10 minutes!"></textarea>
+      <div class="demo-right-col">
+        <select class="demo-channel" id="demo-channel">
+          <option value="email">📧 Email</option>
+          <option value="chat">💬 Chat</option>
+          <option value="phone">📞 Phone</option>
+          <option value="social">📱 Social</option>
+        </select>
+        <button class="demo-send" id="demo-btn" onclick="sendTriage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send to AI
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-examples">
+      <span class="demo-ex-label">Try an example:</span>
+      <button class="demo-ex-btn" onclick="fillExample('My account has been hacked and I am locked out. This is extremely urgent!')">🔐 Account hack</button>
+      <button class="demo-ex-btn" onclick="fillExample('I was charged twice for my subscription last month. Please refund immediately.')">💳 Double charge</button>
+      <button class="demo-ex-btn" onclick="fillExample('The app keeps crashing every time I try to open the reports section.')">💥 App crash</button>
+      <button class="demo-ex-btn" onclick="fillExample('How do I export my data to CSV? I cannot find the option anywhere.')">❓ How-to question</button>
+      <button class="demo-ex-btn" onclick="fillExample('Delivery is 3 days late and I need this for an event tomorrow. Very disappointed.')">📦 Late delivery</button>
+    </div>
+
+    <!-- Pipeline steps -->
+    <div class="pipeline" id="demo-pipeline">
+      <div class="pipe-step" id="ps-0">
+        <div class="pipe-step-icon">📨</div>
+        <div class="pipe-step-label">Received</div>
+        <div class="pipe-step-detail">Message ingested</div>
+      </div>
+      <div class="pipe-arrow" id="pa-0">→</div>
+      <div class="pipe-step" id="ps-1">
+        <div class="pipe-step-icon">🤖</div>
+        <div class="pipe-step-label">Claude AI</div>
+        <div class="pipe-step-detail">Analysing text</div>
+      </div>
+      <div class="pipe-arrow" id="pa-1">→</div>
+      <div class="pipe-step" id="ps-2">
+        <div class="pipe-step-icon">💬</div>
+        <div class="pipe-step-label">Sentiment</div>
+        <div class="pipe-step-detail">Scoring tone</div>
+      </div>
+      <div class="pipe-arrow" id="pa-2">→</div>
+      <div class="pipe-step" id="ps-3">
+        <div class="pipe-step-icon">🏷️</div>
+        <div class="pipe-step-label">Issue type</div>
+        <div class="pipe-step-detail">Classifying</div>
+      </div>
+      <div class="pipe-arrow" id="pa-3">→</div>
+      <div class="pipe-step" id="ps-4">
+        <div class="pipe-step-icon">🚨</div>
+        <div class="pipe-step-label">Priority</div>
+        <div class="pipe-step-detail">Assigning level</div>
+      </div>
+      <div class="pipe-arrow" id="pa-4">→</div>
+      <div class="pipe-step" id="ps-5">
+        <div class="pipe-step-icon">✅</div>
+        <div class="pipe-step-label">Stored</div>
+        <div class="pipe-step-detail">In dashboard</div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="demo-result" style="display:none;"></div>
+
   </div>
 
   <!-- KPI -->
@@ -600,6 +805,151 @@ async function refresh() {
     console.error(e);
   }
 }
+
+/* ── Live Demo ── */
+const EXAMPLES = {
+  'My account has been hacked and I am locked out. This is extremely urgent!': 'email',
+  'I was charged twice for my subscription last month. Please refund immediately.': 'chat',
+  'The app keeps crashing every time I try to open the reports section.': 'chat',
+  'How do I export my data to CSV? I cannot find the option anywhere.': 'email',
+  'Delivery is 3 days late and I need this for an event tomorrow. Very disappointed.': 'email',
+};
+
+function fillExample(msg) {
+  document.getElementById('demo-msg').value = msg;
+  if (EXAMPLES[msg]) document.getElementById('demo-channel').value = EXAMPLES[msg];
+  document.getElementById('demo-msg').focus();
+  resetPipeline();
+  document.getElementById('demo-result').style.display = 'none';
+}
+
+function resetPipeline() {
+  for (let i=0;i<6;i++) {
+    const s=document.getElementById(`ps-${i}`);
+    if(s){s.classList.remove('active','done');}
+  }
+  for (let i=0;i<5;i++) {
+    const a=document.getElementById(`pa-${i}`);
+    if(a){a.classList.remove('lit','done');}
+  }
+}
+
+function activateStep(idx) {
+  for(let i=0;i<idx;i++){
+    const s=document.getElementById(`ps-${i}`);
+    if(s){s.classList.remove('active');s.classList.add('done');}
+    const a=document.getElementById(`pa-${i}`);
+    if(a){a.classList.remove('lit');a.classList.add('done');}
+  }
+  const cur=document.getElementById(`ps-${idx}`);
+  if(cur){cur.classList.add('active');}
+  if(idx>0){
+    const prev=document.getElementById(`pa-${idx-1}`);
+    if(prev){prev.classList.add('lit');}
+  }
+}
+
+async function sendTriage() {
+  const msg     = document.getElementById('demo-msg').value.trim();
+  const channel = document.getElementById('demo-channel').value;
+  if (!msg) { document.getElementById('demo-msg').focus(); return; }
+
+  const btn = document.getElementById('demo-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite;width:14px;height:14px"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0"/></svg> Triaging…';
+
+  const resultEl = document.getElementById('demo-result');
+  resultEl.style.display = 'none';
+  resetPipeline();
+
+  // Animate pipeline steps while API call runs
+  const DELAYS = [0, 400, 900, 1400, 1900];
+  DELAYS.forEach((d,i) => setTimeout(() => activateStep(i), d));
+
+  try {
+    const res  = await fetch('/triage', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ message: msg, channel }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // Complete remaining pipeline steps
+    const elapsed = Date.now();
+    setTimeout(() => {
+      activateStep(5);
+      setTimeout(() => {
+        // Mark all done
+        for(let i=0;i<6;i++){const s=document.getElementById(`ps-${i}`);if(s){s.classList.remove('active');s.classList.add('done');}}
+        for(let i=0;i<5;i++){const a=document.getElementById(`pa-${i}`);if(a){a.classList.remove('lit');a.classList.add('done');}}
+        showResult(data);
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send to AI';
+        // Refresh dashboard in 2s so new ticket appears
+        setTimeout(() => refresh(), 2000);
+      }, 400);
+    }, Math.max(0, 2200 - (Date.now() - elapsed)));
+
+  } catch(err) {
+    resetPipeline();
+    resultEl.className = 'demo-result error';
+    resultEl.innerHTML = `<div class="result-header"><span class="result-icon">❌</span><span class="result-title err">Triage failed — ${err.message}</span></div><div style="font-size:12px;color:#f87171;">Check that your Render backend is awake and the /triage endpoint accepts { message, channel }.</div>`;
+    resultEl.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send to AI';
+  }
+}
+
+function showResult(d) {
+  const priColor  = {Critical:'red', High:'amber', Low:'green'}[d.priority] || '';
+  const sentColor = ['negative','highly_negative'].includes(d.sentiment) ? 'amber' : (d.sentiment==='positive' ? 'green' : '');
+  const score     = parseFloat(d.sentiment_score);
+  const scoreStr  = isNaN(score) ? '—' : (score>=0?'+':'')+score.toFixed(2);
+
+  const el = document.getElementById('demo-result');
+  el.className = 'demo-result';
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="result-header">
+      <span class="result-icon">✅</span>
+      <span class="result-title">Ticket triaged successfully</span>
+      <span class="result-id">${d.ticket_id || ''}</span>
+    </div>
+    <div class="result-grid">
+      <div class="result-field">
+        <div class="result-field-label">Priority</div>
+        <div class="result-field-val ${priColor}">${d.priority || '—'}</div>
+      </div>
+      <div class="result-field">
+        <div class="result-field-label">Sentiment</div>
+        <div class="result-field-val ${sentColor}">${d.sentiment || '—'}</div>
+      </div>
+      <div class="result-field">
+        <div class="result-field-label">Score</div>
+        <div class="result-field-val ${sentColor}">${scoreStr}</div>
+      </div>
+      <div class="result-field" style="grid-column:span 2;">
+        <div class="result-field-label">Issue type</div>
+        <div class="result-field-val" style="font-size:13px;">${d.issue_type || '—'}</div>
+      </div>
+      <div class="result-field">
+        <div class="result-field-label">Channel</div>
+        <div class="result-field-val" style="font-size:13px;">${d.channel || '—'}</div>
+      </div>
+    </div>
+    <div class="result-msg">"${(d.message||'').slice(0,120)}${(d.message||'').length>120?'…':''}"</div>
+    <div class="result-refresh-note">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      Dashboard refreshing in 2s — new ticket will appear in the table
+    </div>`;
+}
+
+// Spin keyframe for loading button
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
 
 refresh();
 setInterval(refresh, 30_000);
