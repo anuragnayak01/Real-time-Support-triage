@@ -18,12 +18,12 @@
       line-height: 1.5;
     }
 
-    /* ─── Sidebar (dashboard.tremor.so style) ─── */
+    /* ─── Sidebar ─── */
     .sidebar {
       width: 220px;
       background: #030712;
       border-right: 1px solid #1a2332;
-      padding: 20px 12px 20px;
+      padding: 20px 12px;
       position: fixed;
       top: 0; left: 0;
       height: 100vh;
@@ -31,223 +31,187 @@
       flex-direction: column;
       z-index: 10;
       flex-shrink: 0;
+      transition: filter 0.28s ease;
     }
-
-    .sb-logo {
-      display: flex; align-items: center; gap: 10px;
-      padding: 4px 8px; margin-bottom: 28px;
-    }
-    .sb-icon {
-      width: 30px; height: 30px;
-      background: #4f46e5; border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
+    .sb-logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px; margin-bottom: 28px; }
+    .sb-icon { width: 30px; height: 30px; background: #4f46e5; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
     .sb-name { font-size: 13.5px; font-weight: 600; color: #f9fafb; }
-    .sb-role {
-      font-size: 10px; color: #4b5563;
-      background: #0f172a; border: 1px solid #1a2332;
-      border-radius: 4px; padding: 1px 7px; display: inline-block; margin-top: 2px;
-    }
-
+    .sb-role { font-size: 10px; color: #4b5563; background: #0f172a; border: 1px solid #1a2332; border-radius: 4px; padding: 1px 7px; display: inline-block; margin-top: 2px; }
     .sb-section { margin-bottom: 22px; }
-    .sb-section-label {
-      font-size: 10.5px; font-weight: 500; color: #374151;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      padding: 0 8px; margin-bottom: 3px;
-    }
-    .sb-link {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 8px; border-radius: 6px;
-      color: #6b7280; font-size: 13px;
-      cursor: pointer; transition: all 0.12s;
-      text-decoration: none;
-    }
+    .sb-section-label { font-size: 10.5px; font-weight: 500; color: #374151; text-transform: uppercase; letter-spacing: 0.08em; padding: 0 8px; margin-bottom: 3px; }
+    .sb-link { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; color: #6b7280; font-size: 13px; cursor: pointer; transition: all 0.12s; text-decoration: none; }
     .sb-link:hover { background: #0f172a; color: #e5e7eb; }
     .sb-link.active { background: #0f172a; color: #f9fafb; }
     .sb-link svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.8; }
-
-    .sb-footer {
-      margin-top: auto;
-      padding: 14px 8px 0;
-      border-top: 1px solid #1a2332;
-    }
+    .sb-footer { margin-top: auto; padding: 14px 8px 0; border-top: 1px solid #1a2332; }
     .sb-footer-label { font-size: 10.5px; color: #374151; margin-bottom: 2px; }
-    .sb-footer-time  { font-size: 11.5px; color: #4b5563; font-variant-numeric: tabular-nums; }
+    .sb-footer-time { font-size: 11.5px; color: #4b5563; font-variant-numeric: tabular-nums; }
 
     /* ─── Main ─── */
-    .main {
-      margin-left: 220px;
-      flex: 1;
-      padding: 28px 28px 48px;
-      min-width: 0;
-    }
+    .main { margin-left: 220px; flex: 1; padding: 28px 28px 48px; min-width: 0; }
 
-    /* ─── Page header (overview.tremor.so/support style) ─── */
-    .page-head {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: 24px;
-    }
+    /* ─── Page header ─── */
+    .page-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
     .page-title { font-size: 20px; font-weight: 600; color: #f9fafb; margin-bottom: 3px; }
     .page-sub   { font-size: 13px; color: #4b5563; }
     .head-right { display: flex; align-items: center; gap: 8px; }
-
-    .live-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: #0f172a; border: 1px solid #1a2332;
-      border-radius: 6px; padding: 6px 12px;
-      font-size: 12px; color: #6b7280;
-    }
-    .live-dot {
-      width: 6px; height: 6px;
-      background: #22c55e; border-radius: 50%;
-      animation: blink 2s ease-in-out infinite;
-    }
+    .live-badge { display: flex; align-items: center; gap: 6px; background: #0f172a; border: 1px solid #1a2332; border-radius: 6px; padding: 6px 12px; font-size: 12px; color: #6b7280; }
+    .live-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
-
-    .btn-action {
-      background: #4f46e5; color: #fff;
-      border: none; border-radius: 6px;
-      padding: 7px 14px; font-size: 13px; font-weight: 500;
-      cursor: pointer; font-family: inherit;
-      transition: background 0.12s;
-    }
+    .btn-action { background: #4f46e5; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background 0.12s; }
     .btn-action:hover { background: #4338ca; }
 
-    /* ─── KPI row (dashboard.tremor.so/overview metric style) ─── */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .kpi {
-      background: #0b1120; border: 1px solid #1a2332;
-      border-radius: 10px; padding: 16px 18px;
-    }
+    /* ─── KPI row ─── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 14px; }
+    .kpi { background: #0b1120; border: 1px solid #1a2332; border-radius: 10px; padding: 16px 18px; transition: filter 0.28s ease; }
     .kpi-label { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
     .kpi-val   { font-size: 26px; font-weight: 700; color: #f9fafb; line-height: 1.1; margin-bottom: 5px; }
     .kpi-val.red   { color: #ef4444; }
     .kpi-val.amber { color: #f59e0b; }
     .kpi-sub { font-size: 11.5px; color: #374151; }
 
-    /* ─── Status row (overview.tremor.so/support style: tickets | ring | volume) ─── */
-    .status-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1.6fr;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .card {
-      background: #0b1120; border: 1px solid #1a2332;
-      border-radius: 10px; padding: 18px 20px;
-    }
-    .card-label {
-      font-size: 11px; font-weight: 500; color: #374151;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      margin-bottom: 12px;
-    }
-
-    /* Current tickets card */
+    /* ─── Status row ─── */
+    .status-row { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 12px; margin-bottom: 14px; }
+    .card { background: #0b1120; border: 1px solid #1a2332; border-radius: 10px; padding: 18px 20px; transition: filter 0.28s ease, border-color 0.15s; }
+    .card-label { font-size: 11px; font-weight: 500; color: #374151; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
     .big-count { font-size: 44px; font-weight: 700; color: #f9fafb; line-height: 1; margin-bottom: 18px; }
-
     .bkd-item { margin-bottom: 9px; }
     .bkd-row  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .bkd-name { font-size: 12.5px; color: #9ca3af; }
     .bkd-pct  { font-size: 12.5px; font-weight: 500; color: #f9fafb; }
     .pbar { height: 3px; background: #1a2332; border-radius: 9999px; overflow: hidden; }
     .pbar-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
-
-    /* Volume card */
     .vol-nums { display: flex; gap: 22px; margin-bottom: 10px; }
     .vol-n { font-size: 24px; font-weight: 700; color: #f9fafb; line-height: 1; }
     .vol-l { font-size: 11px; color: #4b5563; margin-top: 3px; }
 
-    /* ─── Charts row ─── */
-    .charts-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .chart-card {
-      background: #0b1120; border: 1px solid #1a2332;
-      border-radius: 10px; padding: 18px 20px;
-    }
-    .chart-title { font-size: 13.5px; font-weight: 500; color: #e5e7eb; margin-bottom: 14px; }
+    /* ─── Chart cards ─── */
+    .charts-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .chart-card { background: #0b1120; border: 1px solid #1a2332; border-radius: 10px; padding: 18px 20px; transition: filter 0.28s ease, border-color 0.15s; }
+    .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .chart-title { font-size: 13.5px; font-weight: 500; color: #e5e7eb; transition: color 0.15s; }
 
-    /* ─── Ticket table (overview.tremor.so/support table style) ─── */
-    .table-wrap {
-      background: #0b1120; border: 1px solid #1a2332;
-      border-radius: 10px; overflow: hidden;
-      margin-bottom: 14px;
+    /* ─── Clickable chart style ─── */
+    .chart-clickable { cursor: pointer; }
+    .chart-clickable:hover { border-color: #2d3f55; }
+    .chart-clickable:hover .chart-title { color: #f9fafb; }
+    .chart-clickable:hover .expand-hint { color: #4b5563; }
+
+    .expand-hint {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; color: #1f2937;
+      transition: color 0.15s;
+      user-select: none;
     }
-    .table-topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px 14px;
-      border-bottom: 1px solid #1a2332;
+    .expand-hint svg { width: 11px; height: 11px; }
+
+    /* ─── Modal overlay ─── */
+    .chart-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.90);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: backdropIn 0.22s ease;
     }
+    @keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes backdropOut { from { opacity: 1; } to { opacity: 0; } }
+
+    .chart-modal-box {
+      background: #0b1120;
+      border: 1px solid #2d3f55;
+      border-radius: 16px;
+      padding: 24px 26px;
+      width: min(90vw, 920px);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      animation: modalIn 0.24s cubic-bezier(0.34, 1.4, 0.64, 1);
+      box-shadow: 0 0 0 1px #1a2332, 0 32px 80px rgba(0,0,0,0.7);
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.90) translateY(16px); opacity: 0; }
+      to   { transform: scale(1)    translateY(0);    opacity: 1; }
+    }
+
+    .modal-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 20px; flex-shrink: 0;
+    }
+    .modal-title { font-size: 17px; font-weight: 600; color: #f9fafb; margin-bottom: 3px; }
+    .modal-sub   { font-size: 12px; color: #374151; }
+
+    .modal-close {
+      width: 30px; height: 30px;
+      background: #1a2332; border: 1px solid #263045;
+      border-radius: 7px; color: #6b7280;
+      cursor: pointer; font-size: 16px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.12s; margin-left: 16px; margin-top: 2px;
+    }
+    .modal-close:hover { background: #263045; color: #f9fafb; }
+
+    .modal-stats {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      margin-bottom: 18px; flex-shrink: 0;
+    }
+    .modal-stat { background: #060d1a; border: 1px solid #1a2332; border-radius: 8px; padding: 10px 16px; }
+    .modal-stat-label { font-size: 11px; color: #4b5563; margin-bottom: 3px; }
+    .modal-stat-val   { font-size: 18px; font-weight: 700; color: #f9fafb; }
+    .modal-stat-val.red   { color: #ef4444; }
+    .modal-stat-val.amber { color: #f59e0b; }
+    .modal-stat-val.green { color: #22c55e; }
+
+    .modal-body { flex: 1; min-height: 0; overflow: auto; }
+
+    /* ─── Dim everything except modal when open ─── */
+    body.modal-open .sidebar,
+    body.modal-open .main > * {
+      filter: blur(3px) brightness(0.3);
+      pointer-events: none;
+      transition: filter 0.28s ease;
+    }
+    body.modal-open .chart-modal-backdrop,
+    body.modal-open .chart-modal-backdrop * {
+      filter: none !important;
+      pointer-events: auto !important;
+    }
+
+    /* ─── Section head ─── */
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 4px; }
+    .section-head-title { font-size: 13px; font-weight: 500; color: #6b7280; }
+
+    /* ─── Ticket table ─── */
+    .table-wrap { background: #0b1120; border: 1px solid #1a2332; border-radius: 10px; overflow: hidden; margin-bottom: 14px; transition: filter 0.28s ease; }
+    .table-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 14px; border-bottom: 1px solid #1a2332; }
     .table-title { font-size: 13.5px; font-weight: 500; color: #e5e7eb; }
     .table-sub   { font-size: 12px; color: #374151; }
-
     table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    thead th {
-      background: #060d1a; color: #374151;
-      font-size: 10.5px; font-weight: 500;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      padding: 9px 14px; text-align: left;
-      border-bottom: 1px solid #1a2332;
-    }
-    tbody td {
-      padding: 11px 14px; color: #d1d5db;
-      border-bottom: 1px solid #0f1929;
-    }
+    thead th { background: #060d1a; color: #374151; font-size: 10.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; padding: 9px 14px; text-align: left; border-bottom: 1px solid #1a2332; }
+    tbody td { padding: 11px 14px; color: #d1d5db; border-bottom: 1px solid #0f1929; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #0a1525; }
-
     td.mono { font-family: 'SF Mono', Consolas, monospace; font-size: 11px; color: #374151; }
     td.msg  { max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-    .badge {
-      display: inline-block; padding: 2px 9px;
-      border-radius: 9999px; font-size: 11px; font-weight: 600;
-    }
+    .badge { display: inline-block; padding: 2px 9px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
     .badge-Critical { background: #450a0a; color: #fca5a5; }
     .badge-High     { background: #431407; color: #fdba74; }
     .badge-Low      { background: #052e16; color: #86efac; }
-
     .sent-wrap { display: inline-flex; align-items: center; gap: 5px; }
     .sent-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-    /* Pagination (overview.tremor.so/support: "Showing 1-16 of 100 / Previous page / Next page") */
-    .pager {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 20px;
-      border-top: 1px solid #1a2332;
-    }
+    .pager { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-top: 1px solid #1a2332; }
     .pager-info { font-size: 12.5px; color: #4b5563; }
     .pager-btns { display: flex; gap: 6px; }
-    .pager-btn {
-      background: #0f172a; border: 1px solid #1a2332;
-      border-radius: 6px; padding: 5px 13px;
-      font-size: 12.5px; color: #9ca3af;
-      cursor: pointer; font-family: inherit;
-      transition: all 0.12s;
-    }
+    .pager-btn { background: #0f172a; border: 1px solid #1a2332; border-radius: 6px; padding: 5px 13px; font-size: 12.5px; color: #9ca3af; cursor: pointer; font-family: inherit; transition: all 0.12s; }
     .pager-btn:hover:not(:disabled) { background: #1a2332; color: #f9fafb; }
     .pager-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    /* ─── Divider label (dashboard.tremor.so section header style) ─── */
-    .section-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 12px; margin-top: 4px;
-    }
-    .section-head-title { font-size: 13px; font-weight: 500; color: #6b7280; }
   </style>
 </head>
 <body>
 
-<!-- ═══ Sidebar ═══ -->
+<!-- Sidebar -->
 <nav class="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">ST</div>
@@ -256,181 +220,122 @@
       <span class="sb-role">Live dashboard</span>
     </div>
   </div>
-
   <div class="sb-section">
     <div class="sb-section-label">Overview</div>
     <a class="sb-link active" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <rect x="3" y="3" width="7" height="7" rx="1"/>
-        <rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/>
-        <rect x="14" y="14" width="7" height="7" rx="1"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Dashboard
     </a>
     <a class="sb-link" href="#ticket-table">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 000 4h6a2 2 0 000-4M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 000 4h6a2 2 0 000-4M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       Tickets
     </a>
     <a class="sb-link" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
       Analytics
     </a>
   </div>
-
   <div class="sb-section">
     <div class="sb-section-label">Shortcuts</div>
-    <a class="sb-link" href="#chart-volume">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-      Volume trends
-    </a>
-    <a class="sb-link" href="#chart-sentiment">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
-      </svg>
-      Sentiment
-    </a>
-    <a class="sb-link" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-      </svg>
-      Settings
-    </a>
-  </div>
+    <a class="sb-link" href="#chart-volume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Volume trends</a>
+    <a class="sb-link" href="#chart-sentiment-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>Sentiment</a>
 
+  </div>
   <div class="sb-footer">
     <div class="sb-footer-label">Auto-refreshes every 30s</div>
     <div class="sb-footer-time" id="last-refresh">—</div>
   </div>
 </nav>
 
-<!-- ═══ Main ═══ -->
+<!-- Main -->
 <main class="main">
 
-  <!-- Page header -->
   <div class="page-head">
     <div>
       <div class="page-title">Support Dashboard</div>
-      <div class="page-sub">Real-time monitoring of support metrics</div>
+      <div class="page-sub">Real-time monitoring · click any chart to expand</div>
     </div>
     <div class="head-right">
-      <div class="live-badge">
-        <span class="live-dot"></span>
-        Live
-      </div>
+      <div class="live-badge"><span class="live-dot"></span>Live</div>
       <button class="btn-action" onclick="refresh()">Refresh now</button>
     </div>
   </div>
 
-  <!-- ── KPI cards ── -->
+  <!-- KPI -->
   <div class="kpi-grid">
-    <div class="kpi">
-      <div class="kpi-label">Total tickets</div>
-      <div class="kpi-val" id="kpi-total">—</div>
-      <div class="kpi-sub" id="kpi-total-sub">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Critical</div>
-      <div class="kpi-val red" id="kpi-critical">—</div>
-      <div class="kpi-sub" id="kpi-crit-sub">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Negative sentiment</div>
-      <div class="kpi-val amber" id="kpi-negative">—</div>
-      <div class="kpi-sub" id="kpi-neg-sub">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Avg sentiment score</div>
-      <div class="kpi-val" id="kpi-score">—</div>
-      <div class="kpi-sub" id="kpi-score-sub">—</div>
-    </div>
+    <div class="kpi"><div class="kpi-label">Total tickets</div><div class="kpi-val" id="kpi-total">—</div><div class="kpi-sub" id="kpi-total-sub">—</div></div>
+    <div class="kpi"><div class="kpi-label">Critical</div><div class="kpi-val red" id="kpi-critical">—</div><div class="kpi-sub" id="kpi-crit-sub">—</div></div>
+    <div class="kpi"><div class="kpi-label">Negative sentiment</div><div class="kpi-val amber" id="kpi-negative">—</div><div class="kpi-sub" id="kpi-neg-sub">—</div></div>
+    <div class="kpi"><div class="kpi-label">Avg sentiment score</div><div class="kpi-val" id="kpi-score">—</div><div class="kpi-sub" id="kpi-score-sub">—</div></div>
   </div>
 
-  <!-- ── Status cards: tickets | priority ring | volume ── -->
+  <!-- Status row -->
   <div class="status-row">
-
-    <!-- Current Tickets (like overview.tremor.so/support) -->
     <div class="card">
       <div class="card-label">Current tickets</div>
       <div class="big-count" id="stat-total">—</div>
       <div id="breakdown-wrap"></div>
     </div>
 
-    <!-- Priority ring (like SLA Performance ring) -->
-    <div class="card" style="display:flex;flex-direction:column;">
-      <div class="card-label">Priority distribution</div>
-      <div id="chart-priority" style="flex:1;min-height:150px;"></div>
-    </div>
-
-    <!-- Volume trends (like Call Volume Trends) -->
-    <div class="card">
-      <div class="card-label">Volume trends</div>
-      <div class="vol-nums">
-        <div>
-          <div class="vol-n" id="vol-today">—</div>
-          <div class="vol-l">Today</div>
-        </div>
-        <div>
-          <div class="vol-n" id="vol-yesterday">—</div>
-          <div class="vol-l">Yesterday</div>
-        </div>
+    <div class="card chart-clickable" onclick="openChart('priority')" title="Click to expand">
+      <div class="chart-header">
+        <div class="card-label" style="margin-bottom:0">Priority distribution</div>
+        <span class="expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Expand</span>
       </div>
-      <div id="chart-volume" style="height:110px;" id="chart-volume"></div>
+      <div id="chart-priority" style="flex:1;min-height:150px;margin-top:12px;"></div>
     </div>
 
+    <div class="card chart-clickable" onclick="openChart('volume')" title="Click to expand">
+      <div class="chart-header">
+        <div class="card-label" style="margin-bottom:0">Volume trends</div>
+        <span class="expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Expand</span>
+      </div>
+      <div class="vol-nums" style="margin-top:12px;">
+        <div><div class="vol-n" id="vol-today">—</div><div class="vol-l">Today</div></div>
+        <div><div class="vol-n" id="vol-yesterday">—</div><div class="vol-l">Yesterday</div></div>
+      </div>
+      <div id="chart-volume" style="height:100px;"></div>
+    </div>
   </div>
 
-  <!-- ── Sentiment + Channel charts ── -->
-  <div class="section-head">
-    <span class="section-head-title">Sentiment &amp; Channel</span>
-  </div>
-  <div class="charts-2" id="chart-sentiment-section">
-    <div class="chart-card" id="chart-sentiment-card">
-      <div class="chart-title">Sentiment breakdown</div>
+  <!-- Sentiment + Channel -->
+  <div class="section-head"><span class="section-head-title">Sentiment &amp; Channel</span></div>
+  <div class="charts-2">
+    <div class="chart-card chart-clickable" id="chart-sentiment-card" onclick="openChart('sentiment')">
+      <div class="chart-header">
+        <div class="chart-title">Sentiment breakdown</div>
+        <span class="expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Expand</span>
+      </div>
       <div id="chart-sentiment" style="height:210px;"></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Channel breakdown</div>
+    <div class="chart-card chart-clickable" onclick="openChart('channel')">
+      <div class="chart-header">
+        <div class="chart-title">Channel breakdown</div>
+        <span class="expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Expand</span>
+      </div>
       <div id="chart-channel" style="height:210px;"></div>
     </div>
   </div>
 
-  <!-- ── Issue types ── -->
-  <div class="chart-card" style="margin-bottom:14px;">
-    <div class="chart-title">Top issue types</div>
+  <!-- Issue types -->
+  <div class="chart-card chart-clickable" style="margin-bottom:14px;" onclick="openChart('issue')">
+    <div class="chart-header">
+      <div class="chart-title">Top issue types</div>
+      <span class="expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Expand · shows all</span>
+    </div>
     <div id="chart-issue" style="height:190px;"></div>
   </div>
 
-  <!-- ── Ticket table ── -->
+  <!-- Ticket table -->
   <div class="table-wrap" id="ticket-table">
     <div class="table-topbar">
       <div class="table-title">Latest tickets</div>
       <div class="table-sub" id="table-range">Showing —</div>
     </div>
-
     <table>
-      <thead>
-        <tr>
-          <th>Ticket ID</th>
-          <th>Created at</th>
-          <th>Channel</th>
-          <th>Priority</th>
-          <th>Sentiment</th>
-          <th>Issue type</th>
-          <th>Message</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Ticket ID</th><th>Created at</th><th>Channel</th><th>Priority</th><th>Sentiment</th><th>Issue type</th><th>Message</th></tr></thead>
       <tbody id="ticket-tbody"></tbody>
     </table>
-
     <div class="pager">
       <div class="pager-info" id="pager-info">—</div>
       <div class="pager-btns">
@@ -446,6 +351,7 @@
 const PER_PAGE = 15;
 let allTickets = [];
 let page = 1;
+let modalOpen = false;
 
 const DARK = {
   paper_bgcolor: 'transparent',
@@ -453,251 +359,234 @@ const DARK = {
   font: { color: '#4b5563', size: 11, family: 'system-ui, -apple-system, sans-serif' },
   colorway: ['#6366f1','#22c55e','#f59e0b','#ef4444','#06b6d4','#d946ef'],
 };
+const DARK_EXP = {
+  ...DARK,
+  font: { color: '#6b7280', size: 12, family: 'system-ui, -apple-system, sans-serif' },
+};
 const CFG = { responsive: true, displayModeBar: false };
-
-function floorHour(ts) {
-  const d = new Date(ts);
-  d.setMinutes(0,0,0);
-  return d.toISOString();
-}
-
-function fmtTime(ts) {
-  if (!ts) return '—';
-  const d = new Date(ts);
-  return d.toLocaleDateString() + ', ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-}
-
-function fmtScore(v) {
-  const n = parseFloat(v);
-  if (isNaN(n)) return '—';
-  return (n >= 0 ? '+' : '') + n.toFixed(2);
-}
+const CFG_EXP = { responsive: true, displayModeBar: true, modeBarButtonsToRemove: ['lasso2d','select2d','toImage'], displaylogo: false };
 
 const SENT_COLORS = {
-  positive:       '#22c55e',
-  neutral:        '#6b7280',
-  negative:       '#f59e0b',
-  highly_negative:'#ef4444',
+  positive: '#22c55e', neutral: '#6b7280',
+  negative: '#f59e0b', highly_negative: '#ef4444',
 };
 
-function sentCell(s) {
-  const c = SENT_COLORS[s] || '#6b7280';
-  return `<span class="sent-wrap"><span class="sent-dot" style="background:${c};"></span>${s || '—'}</span>`;
-}
+function floorHour(ts) { const d = new Date(ts); d.setMinutes(0,0,0); return d.toISOString(); }
+function fmtTime(ts) { if (!ts) return '—'; const d = new Date(ts); return d.toLocaleDateString() + ', ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+function fmtScore(v) { const n = parseFloat(v); if (isNaN(n)) return '—'; return (n>=0?'+':'')+n.toFixed(2); }
+function sentCell(s) { const c = SENT_COLORS[s]||'#6b7280'; return `<span class="sent-wrap"><span class="sent-dot" style="background:${c}"></span>${s||'—'}</span>`; }
+function priBadge(p) { return `<span class="badge badge-${p}">${p||'—'}</span>`; }
 
-function priBadge(p) {
-  return `<span class="badge badge-${p}">${p || '—'}</span>`;
-}
-
-/* ── KPI row ── */
+/* ── Compact chart renderers ── */
 function renderKPIs(data) {
-  const total    = data.length;
-  const critical = data.filter(t => t.priority === 'Critical').length;
-  const negative = data.filter(t => ['negative','highly_negative'].includes(t.sentiment)).length;
-  const scores   = data.map(t => parseFloat(t.sentiment_score)).filter(n => !isNaN(n));
-  const avg      = scores.length ? scores.reduce((a,b) => a+b, 0) / scores.length : 0;
-
-  document.getElementById('kpi-total').textContent    = total;
-  document.getElementById('kpi-critical').textContent = critical;
-  document.getElementById('kpi-negative').textContent = negative;
-  document.getElementById('kpi-score').textContent    = fmtScore(avg);
-
-  document.getElementById('kpi-total-sub').textContent    = `${critical} critical · ${total-critical} others`;
-  document.getElementById('kpi-crit-sub').textContent     = `${total ? Math.round(critical/total*100) : 0}% of all tickets`;
-  document.getElementById('kpi-neg-sub').textContent      = `${total ? Math.round(negative/total*100) : 0}% negative rate`;
-  document.getElementById('kpi-score-sub').textContent    = avg >= 0 ? 'Positive average' : 'Negative average';
+  const total=data.length, critical=data.filter(t=>t.priority==='Critical').length,
+        negative=data.filter(t=>['negative','highly_negative'].includes(t.sentiment)).length,
+        scores=data.map(t=>parseFloat(t.sentiment_score)).filter(n=>!isNaN(n)),
+        avg=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+  document.getElementById('kpi-total').textContent=total;
+  document.getElementById('kpi-critical').textContent=critical;
+  document.getElementById('kpi-negative').textContent=negative;
+  document.getElementById('kpi-score').textContent=fmtScore(avg);
+  document.getElementById('kpi-total-sub').textContent=`${critical} critical · ${total-critical} others`;
+  document.getElementById('kpi-crit-sub').textContent=`${total?Math.round(critical/total*100):0}% of all tickets`;
+  document.getElementById('kpi-neg-sub').textContent=`${total?Math.round(negative/total*100):0}% negative rate`;
+  document.getElementById('kpi-score-sub').textContent=avg>=0?'Positive average':'Negative average';
 }
 
-/* ── Status cards ── */
 function renderStatusCards(data) {
-  const total    = data.length;
-  const critical = data.filter(t => t.priority === 'Critical').length;
-  const high     = data.filter(t => t.priority === 'High').length;
-  const low      = data.filter(t => t.priority === 'Low').length;
-
-  document.getElementById('stat-total').textContent = total;
-
-  const items = [
-    { label:'Critical', count:critical, color:'#ef4444' },
-    { label:'High',     count:high,     color:'#f59e0b' },
-    { label:'Low',      count:low,      color:'#22c55e' },
-  ];
-
-  document.getElementById('breakdown-wrap').innerHTML = items.map(it => {
-    const pct = total ? Math.round(it.count / total * 100) : 0;
-    return `
-      <div class="bkd-item">
-        <div class="bkd-row">
-          <span class="bkd-name">${it.label}</span>
-          <span class="bkd-pct">${pct}%</span>
-        </div>
-        <div class="pbar">
-          <div class="pbar-fill" style="width:${pct}%; background:${it.color};"></div>
-        </div>
-      </div>`;
+  const total=data.length, critical=data.filter(t=>t.priority==='Critical').length,
+        high=data.filter(t=>t.priority==='High').length, low=data.filter(t=>t.priority==='Low').length;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('breakdown-wrap').innerHTML=[{label:'Critical',count:critical,color:'#ef4444'},{label:'High',count:high,color:'#f59e0b'},{label:'Low',count:low,color:'#22c55e'}].map(it=>{
+    const pct=total?Math.round(it.count/total*100):0;
+    return `<div class="bkd-item"><div class="bkd-row"><span class="bkd-name">${it.label}</span><span class="bkd-pct">${pct}%</span></div><div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${it.color}"></div></div></div>`;
   }).join('');
-
-  /* Volume: today vs yesterday */
-  const todayStr     = new Date().toDateString();
-  const yesterdayStr = new Date(Date.now() - 864e5).toDateString();
-  const tCount = data.filter(t => new Date(t.timestamp).toDateString() === todayStr).length;
-  const yCount = data.filter(t => new Date(t.timestamp).toDateString() === yesterdayStr).length;
-  document.getElementById('vol-today').textContent     = tCount;
-  document.getElementById('vol-yesterday').textContent = yCount;
+  const td=new Date().toDateString(), yd=new Date(Date.now()-864e5).toDateString();
+  document.getElementById('vol-today').textContent=data.filter(t=>new Date(t.timestamp).toDateString()===td).length;
+  document.getElementById('vol-yesterday').textContent=data.filter(t=>new Date(t.timestamp).toDateString()===yd).length;
 }
 
-/* ── Volume sparkline ── */
 function renderVolumeChart(data) {
-  const hourMap = {};
-  data.forEach(t => {
-    const h = floorHour(t.timestamp);
-    hourMap[h] = (hourMap[h] || 0) + 1;
-  });
-  const hours = Object.keys(hourMap).sort();
-  Plotly.react('chart-volume', [{
-    x: hours, y: hours.map(h => hourMap[h]),
-    type:'scatter', mode:'lines',
-    line: { color:'#6366f1', width:2 },
-    fill: 'tozeroy', fillcolor: 'rgba(99,102,241,0.10)',
-    hovertemplate: '%{x|%H:%M}<br>%{y} tickets<extra></extra>',
-  }], {
-    ...DARK,
-    margin:  { t:4, b:4, l:0, r:0 },
-    height:  110,
-    xaxis:   { visible:false },
-    yaxis:   { visible:false },
-    showlegend: false,
-  }, CFG);
+  const m={}; data.forEach(t=>{const h=floorHour(t.timestamp);m[h]=(m[h]||0)+1;});
+  const hrs=Object.keys(m).sort();
+  Plotly.react('chart-volume',[{x:hrs,y:hrs.map(h=>m[h]),type:'scatter',mode:'lines',line:{color:'#6366f1',width:2},fill:'tozeroy',fillcolor:'rgba(99,102,241,0.10)',hovertemplate:'%{x|%H:%M}<br>%{y} tickets<extra></extra>'}],{...DARK,margin:{t:4,b:4,l:0,r:0},height:100,xaxis:{visible:false},yaxis:{visible:false},showlegend:false},CFG);
 }
 
-/* ── Priority donut (like SLA ring) ── */
 function renderPriorityChart(data) {
-  const counts = { Critical:0, High:0, Low:0 };
-  data.forEach(t => { if (counts[t.priority] !== undefined) counts[t.priority]++; });
-
-  Plotly.react('chart-priority', [{
-    labels: ['Critical','High','Low'],
-    values: [counts.Critical, counts.High, counts.Low],
-    type:   'pie', hole: 0.58,
-    marker: { colors:['#ef4444','#f59e0b','#22c55e'], line:{color:'#0b1120',width:2} },
-    textinfo: 'none',
-    hovertemplate: '%{label}: %{value} (%{percent})<extra></extra>',
-  }], {
-    ...DARK,
-    margin:     { t:0, b:0, l:0, r:0 },
-    showlegend: true,
-    legend: {
-      orientation: 'v', x:0.72, y:0.45,
-      font: { color:'#6b7280', size:11 },
-    },
-  }, CFG);
+  const c={Critical:0,High:0,Low:0}; data.forEach(t=>{if(c[t.priority]!==undefined)c[t.priority]++;});
+  Plotly.react('chart-priority',[{labels:['Critical','High','Low'],values:[c.Critical,c.High,c.Low],type:'pie',hole:0.58,marker:{colors:['#ef4444','#f59e0b','#22c55e'],line:{color:'#0b1120',width:2}},textinfo:'none',hovertemplate:'%{label}: %{value} (%{percent})<extra></extra>'}],{...DARK,margin:{t:0,b:0,l:0,r:0},showlegend:true,legend:{orientation:'v',x:0.72,y:0.45,font:{color:'#6b7280',size:11}}},CFG);
 }
 
-/* ── Sentiment donut ── */
 function renderSentimentChart(data) {
-  const map = {};
-  data.forEach(t => map[t.sentiment] = (map[t.sentiment]||0)+1);
-  const labels = Object.keys(map);
-  Plotly.react('chart-sentiment', [{
-    labels, values: labels.map(l => map[l]),
-    type:'pie', hole:0.5,
-    marker: { colors: labels.map(l => SENT_COLORS[l]||'#6366f1'), line:{color:'#0b1120',width:2} },
-    textinfo: 'label+percent',
-    textfont: { color:'#e5e7eb', size:10.5 },
-    hovertemplate: '%{label}: %{value}<extra></extra>',
-  }], {
-    ...DARK,
-    margin:     { t:10, b:10, l:10, r:10 },
-    height:     210,
-    showlegend: false,
-  }, CFG);
+  const m={}; data.forEach(t=>m[t.sentiment]=(m[t.sentiment]||0)+1);
+  const l=Object.keys(m);
+  Plotly.react('chart-sentiment',[{labels:l,values:l.map(k=>m[k]),type:'pie',hole:0.5,marker:{colors:l.map(k=>SENT_COLORS[k]||'#6366f1'),line:{color:'#0b1120',width:2}},textinfo:'label+percent',textfont:{color:'#e5e7eb',size:10.5},hovertemplate:'%{label}: %{value}<extra></extra>'}],{...DARK,margin:{t:10,b:10,l:10,r:10},height:210,showlegend:false},CFG);
 }
 
-/* ── Channel bar ── */
 function renderChannelChart(data) {
-  const map = {};
-  data.forEach(t => map[t.channel] = (map[t.channel]||0)+1);
-  const chs = Object.keys(map).sort();
-  Plotly.react('chart-channel', [{
-    x: chs, y: chs.map(c => map[c]),
-    type: 'bar',
-    marker: { color:['#6366f1','#1D9E75','#f59e0b','#06b6d4','#d946ef'] },
-    text: chs.map(c => map[c]),
-    textposition: 'outside',
-    textfont: { color:'#9ca3af', size:11 },
-    hovertemplate: '%{x}: %{y}<extra></extra>',
-  }], {
-    ...DARK,
-    height:     210,
-    margin:     { t:10, b:36, l:30, r:10 },
-    xaxis:      { color:'#374151', showgrid:false, zeroline:false },
-    yaxis:      { color:'#374151', gridcolor:'#1a2332', rangemode:'tozero' },
-    showlegend: false,
-  }, CFG);
+  const m={}; data.forEach(t=>m[t.channel]=(m[t.channel]||0)+1);
+  const chs=Object.keys(m).sort();
+  Plotly.react('chart-channel',[{x:chs,y:chs.map(c=>m[c]),type:'bar',marker:{color:['#6366f1','#1D9E75','#f59e0b','#06b6d4','#d946ef']},text:chs.map(c=>m[c]),textposition:'outside',textfont:{color:'#9ca3af',size:11},hovertemplate:'%{x}: %{y}<extra></extra>'}],{...DARK,height:210,margin:{t:10,b:36,l:30,r:10},xaxis:{color:'#374151',showgrid:false,zeroline:false},yaxis:{color:'#374151',gridcolor:'#1a2332',rangemode:'tozero'},showlegend:false},CFG);
 }
 
-/* ── Issue types horizontal bar ── */
 function renderIssueChart(data) {
-  const map = {};
-  data.forEach(t => { if (t.issue_type) map[t.issue_type] = (map[t.issue_type]||0)+1; });
-  const sorted = Object.entries(map).sort((a,b) => a[1]-b[1]).slice(-8);
-  Plotly.react('chart-issue', [{
-    y: sorted.map(e => e[0]),
-    x: sorted.map(e => e[1]),
-    type: 'bar', orientation: 'h',
-    marker: { color: sorted.map((_,i) => `hsl(${238-i*14},58%,${54+i*3}%)`) },
-    hovertemplate: '%{y}: %{x}<extra></extra>',
-  }], {
-    ...DARK,
-    height: 190,
-    margin: { t:8, b:28, l:120, r:20 },
-    xaxis:  { color:'#374151', gridcolor:'#1a2332', zeroline:false },
-    yaxis:  { color:'#6b7280', showgrid:false },
-    showlegend: false,
-  }, CFG);
+  const m={}; data.forEach(t=>{if(t.issue_type)m[t.issue_type]=(m[t.issue_type]||0)+1;});
+  const s=Object.entries(m).sort((a,b)=>a[1]-b[1]).slice(-8);
+  Plotly.react('chart-issue',[{y:s.map(e=>e[0]),x:s.map(e=>e[1]),type:'bar',orientation:'h',marker:{color:s.map((_,i)=>`hsl(${238-i*14},58%,${54+i*3}%)`)},hovertemplate:'%{y}: %{x}<extra></extra>'}],{...DARK,height:190,margin:{t:8,b:28,l:120,r:20},xaxis:{color:'#374151',gridcolor:'#1a2332',zeroline:false},yaxis:{color:'#6b7280',showgrid:false},showlegend:false},CFG);
 }
 
-/* ── Table + pagination ── */
+/* ── Expanded chart renderers ── */
+function expandVolume(cid) {
+  const m={}; allTickets.forEach(t=>{const h=floorHour(t.timestamp);m[h]=(m[h]||0)+1;});
+  const hrs=Object.keys(m).sort(), vals=hrs.map(h=>m[h]), peak=Math.max(...vals), peakH=hrs[vals.indexOf(peak)];
+  Plotly.react(cid,[
+    {x:hrs,y:vals,type:'scatter',mode:'lines+markers',name:'Tickets/hr',line:{color:'#6366f1',width:2.5},marker:{color:'#6366f1',size:5,line:{color:'#0b1120',width:1.5}},fill:'tozeroy',fillcolor:'rgba(99,102,241,0.12)',hovertemplate:'<b>%{x|%b %d %H:%M}</b><br>%{y} tickets<extra></extra>'},
+    {x:[peakH],y:[peak],type:'scatter',mode:'markers+text',showlegend:false,marker:{color:'#ef4444',size:11,line:{color:'#0b1120',width:2}},text:[`Peak: ${peak}`],textposition:'top center',textfont:{color:'#ef4444',size:11},hovertemplate:'Peak hour: %{y}<extra></extra>'},
+  ],{...DARK_EXP,margin:{t:16,b:64,l:50,r:24},xaxis:{color:'#4b5563',gridcolor:'#1a2332',tickformat:'%b %d %H:%M',tickangle:-35,showgrid:true,zeroline:false},yaxis:{color:'#4b5563',gridcolor:'#1a2332',rangemode:'tozero',dtick:1,title:{text:'Tickets per hour',font:{color:'#4b5563',size:11}}},showlegend:false},CFG_EXP);
+}
+
+function expandPriority(cid) {
+  const c={Critical:0,High:0,Low:0}; allTickets.forEach(t=>{if(c[t.priority]!==undefined)c[t.priority]++;});
+  const total=allTickets.length;
+  Plotly.react(cid,[{labels:['Critical','High','Low'],values:[c.Critical,c.High,c.Low],type:'pie',hole:0.54,marker:{colors:['#ef4444','#f59e0b','#22c55e'],line:{color:'#0b1120',width:3}},textinfo:'label+value+percent',textfont:{color:'#e5e7eb',size:13},hovertemplate:'<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}<extra></extra>',insidetextorientation:'radial'}],
+    {...DARK_EXP,margin:{t:20,b:20,l:20,r:40},showlegend:true,legend:{orientation:'v',x:0.78,y:0.5,font:{color:'#9ca3af',size:13},bgcolor:'transparent'},annotations:[{text:`<b>${total}</b><br>total`,x:0.36,y:0.5,font:{size:18,color:'#f9fafb'},showarrow:false,xanchor:'center'}]},CFG_EXP);
+}
+
+function expandSentiment(cid) {
+  const m={}; allTickets.forEach(t=>m[t.sentiment]=(m[t.sentiment]||0)+1);
+  const l=Object.keys(m), v=l.map(k=>m[k]), total=v.reduce((a,b)=>a+b,0);
+  Plotly.react(cid,[{labels:l,values:v,type:'pie',hole:0.54,marker:{colors:l.map(k=>SENT_COLORS[k]||'#6366f1'),line:{color:'#0b1120',width:3}},textinfo:'label+value+percent',textfont:{color:'#e5e7eb',size:12},hovertemplate:'<b>%{label}</b><br>Count: %{value}<br>Share: %{percent}<extra></extra>'}],
+    {...DARK_EXP,margin:{t:20,b:20,l:20,r:40},showlegend:true,legend:{orientation:'v',x:0.76,y:0.5,font:{color:'#9ca3af',size:13},bgcolor:'transparent'},annotations:[{text:`<b>${total}</b><br>responses`,x:0.35,y:0.5,font:{size:18,color:'#f9fafb'},showarrow:false,xanchor:'center'}]},CFG_EXP);
+}
+
+function expandChannel(cid) {
+  const m={}; allTickets.forEach(t=>m[t.channel]=(m[t.channel]||0)+1);
+  const sorted=Object.entries(m).sort((a,b)=>a[1]-b[1]);
+  const total=sorted.reduce((s,e)=>s+e[1],0);
+  Plotly.react(cid,[{y:sorted.map(e=>e[0]),x:sorted.map(e=>e[1]),type:'bar',orientation:'h',marker:{color:sorted.map((_,i)=>['#6366f1','#1D9E75','#f59e0b','#06b6d4','#d946ef'][i%5]),line:{color:'#0b1120',width:1}},text:sorted.map(e=>`${e[1]}  (${Math.round(e[1]/total*100)}%)`),textposition:'outside',textfont:{color:'#9ca3af',size:12},hovertemplate:'<b>%{y}</b><br>%{x} tickets<extra></extra>'}],
+    {...DARK_EXP,margin:{t:16,b:40,l:100,r:90},xaxis:{color:'#4b5563',gridcolor:'#1a2332',title:{text:'Ticket count',font:{color:'#4b5563',size:11}}},yaxis:{color:'#9ca3af',showgrid:false},showlegend:false},CFG_EXP);
+}
+
+function expandIssue(cid) {
+  const m={}; allTickets.forEach(t=>{if(t.issue_type)m[t.issue_type]=(m[t.issue_type]||0)+1;});
+  const sorted=Object.entries(m).sort((a,b)=>a[1]-b[1]);
+  const h=Math.max(320, sorted.length*36);
+  document.getElementById(cid).style.height=h+'px';
+  Plotly.react(cid,[{y:sorted.map(e=>e[0]),x:sorted.map(e=>e[1]),type:'bar',orientation:'h',marker:{color:sorted.map((_,i)=>`hsl(${238-i*10},58%,${52+i*2}%)`)},text:sorted.map(e=>e[1]),textposition:'outside',textfont:{color:'#9ca3af',size:11},hovertemplate:'<b>%{y}</b><br>%{x} tickets<extra></extra>'}],
+    {...DARK_EXP,height:h,margin:{t:16,b:40,l:150,r:50},xaxis:{color:'#4b5563',gridcolor:'#1a2332',zeroline:false,title:{text:'Ticket count',font:{color:'#4b5563',size:11}}},yaxis:{color:'#9ca3af',showgrid:false},showlegend:false},CFG_EXP);
+}
+
+/* ── Chart meta ── */
+const CHARTS = {
+  volume:    { title:'Volume over time',       sub:'Hour-by-hour ticket flow with peak detection', render:expandVolume,    stats:() => statsVolume() },
+  priority:  { title:'Priority distribution',  sub:'Full breakdown with exact counts',             render:expandPriority,  stats:() => statsPriority() },
+  sentiment: { title:'Sentiment breakdown',    sub:'Full breakdown with exact counts',             render:expandSentiment, stats:() => statsSentiment() },
+  channel:   { title:'Channel breakdown',      sub:'All channels with percentage share',           render:expandChannel,   stats:() => statsChannel() },
+  issue:     { title:'All issue types',        sub:'Complete list, not just top 8',                render:expandIssue,     stats:() => statsIssue() },
+};
+
+function statsVolume() {
+  const m={}; allTickets.forEach(t=>{const h=floorHour(t.timestamp);m[h]=(m[h]||0)+1;});
+  const vals=Object.values(m); const peak=vals.length?Math.max(...vals):0;
+  return `<div class="modal-stat"><div class="modal-stat-label">Data points</div><div class="modal-stat-val">${vals.length}</div></div><div class="modal-stat"><div class="modal-stat-label">Peak hour</div><div class="modal-stat-val red">${peak}</div></div>`;
+}
+function statsPriority() {
+  const c={Critical:0,High:0,Low:0}; allTickets.forEach(t=>{if(c[t.priority]!==undefined)c[t.priority]++;});
+  return `<div class="modal-stat"><div class="modal-stat-label">Critical</div><div class="modal-stat-val red">${c.Critical}</div></div><div class="modal-stat"><div class="modal-stat-label">High</div><div class="modal-stat-val amber">${c.High}</div></div><div class="modal-stat"><div class="modal-stat-label">Low</div><div class="modal-stat-val green">${c.Low}</div></div>`;
+}
+function statsSentiment() {
+  const m={}; allTickets.forEach(t=>m[t.sentiment]=(m[t.sentiment]||0)+1);
+  return Object.entries(m).map(([k,v])=>`<div class="modal-stat"><div class="modal-stat-label">${k}</div><div class="modal-stat-val">${v}</div></div>`).join('');
+}
+function statsChannel() {
+  const m={}; allTickets.forEach(t=>m[t.channel]=(m[t.channel]||0)+1);
+  return `<div class="modal-stat"><div class="modal-stat-label">Channels</div><div class="modal-stat-val">${Object.keys(m).length}</div></div>`+Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`<div class="modal-stat"><div class="modal-stat-label">${k}</div><div class="modal-stat-val">${v}</div></div>`).join('');
+}
+function statsIssue() {
+  const m={}; allTickets.forEach(t=>{if(t.issue_type)m[t.issue_type]=(m[t.issue_type]||0)+1;});
+  const top=Object.entries(m).sort((a,b)=>b[1]-a[1])[0];
+  return `<div class="modal-stat"><div class="modal-stat-label">Issue types</div><div class="modal-stat-val">${Object.keys(m).length}</div></div>${top?`<div class="modal-stat"><div class="modal-stat-label">Top issue</div><div class="modal-stat-val" style="font-size:14px">${top[0]}</div></div>`:''}`;
+}
+
+/* ── Modal open / close ── */
+function openChart(chartId) {
+  if (modalOpen) return;
+  modalOpen = true;
+  const meta = CHARTS[chartId];
+  if (!meta) return;
+
+  document.body.classList.add('modal-open');
+
+  const backdrop = document.createElement('div');
+  backdrop.id = 'chart-modal-backdrop';
+  backdrop.className = 'chart-modal-backdrop';
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeChart(); });
+
+  backdrop.innerHTML = `
+    <div class="chart-modal-box" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">${meta.title}</div>
+          <div class="modal-sub">${meta.sub} · press Esc or click outside to close</div>
+        </div>
+        <button class="modal-close" onclick="closeChart()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-stats" id="modal-stats-row">${meta.stats()}</div>
+      <div class="modal-body">
+        <div id="chart-expanded" style="width:100%;min-height:380px;"></div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(backdrop);
+  requestAnimationFrame(() => meta.render('chart-expanded'));
+}
+
+function closeChart() {
+  if (!modalOpen) return;
+  modalOpen = false;
+  const el = document.getElementById('chart-modal-backdrop');
+  if (el) {
+    el.style.animation = 'backdropOut 0.18s ease forwards';
+    setTimeout(() => el.remove(), 180);
+  }
+  document.body.classList.remove('modal-open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeChart(); });
+
+/* ── Table ── */
 function renderTable() {
-  const start = (page - 1) * PER_PAGE;
-  const end   = Math.min(start + PER_PAGE, allTickets.length);
-  const slice = allTickets.slice(start, end);
-  const total = allTickets.length;
-
-  const rangeText = `Showing ${start+1}–${end} of ${total}`;
-  document.getElementById('table-range').textContent = rangeText;
-  document.getElementById('pager-info').textContent  = rangeText;
-  document.getElementById('btn-prev').disabled = (page === 1);
-  document.getElementById('btn-next').disabled = (end >= total);
-
-  document.getElementById('ticket-tbody').innerHTML = slice.map(t => `
+  const start=(page-1)*PER_PAGE, end=Math.min(start+PER_PAGE,allTickets.length), total=allTickets.length;
+  const txt=`Showing ${start+1}–${end} of ${total}`;
+  document.getElementById('table-range').textContent=txt;
+  document.getElementById('pager-info').textContent=txt;
+  document.getElementById('btn-prev').disabled=(page===1);
+  document.getElementById('btn-next').disabled=(end>=total);
+  document.getElementById('ticket-tbody').innerHTML=allTickets.slice(start,end).map(t=>`
     <tr>
-      <td class="mono">${t.ticket_id || '—'}</td>
-      <td style="white-space:nowrap; color:#4b5563; font-size:12px;">${fmtTime(t.timestamp)}</td>
-      <td style="color:#9ca3af;">${t.channel || '—'}</td>
+      <td class="mono">${t.ticket_id||'—'}</td>
+      <td style="white-space:nowrap;color:#4b5563;font-size:12px;">${fmtTime(t.timestamp)}</td>
+      <td style="color:#9ca3af;">${t.channel||'—'}</td>
       <td>${priBadge(t.priority)}</td>
       <td>${sentCell(t.sentiment)}</td>
-      <td style="color:#9ca3af;">${t.issue_type || '—'}</td>
+      <td style="color:#9ca3af;">${t.issue_type||'—'}</td>
       <td class="msg" title="${(t.message||'').replace(/"/g,"'")}">${(t.message||'').slice(0,72)}${(t.message||'').length>72?'…':''}</td>
     </tr>`).join('');
 }
 
 function changePage(dir) {
-  page += dir;
+  page+=dir;
   renderTable();
-  window.scrollTo({ top: document.getElementById('ticket-table').offsetTop - 20, behavior:'smooth' });
+  window.scrollTo({top:document.getElementById('ticket-table').offsetTop-20,behavior:'smooth'});
 }
 
 /* ── Main refresh ── */
 async function refresh() {
   try {
-    const res  = await fetch('/tickets/recent?limit=200');
-    allTickets = await res.json();
-    page = 1;
-
-    document.getElementById('last-refresh').textContent =
-      'Updated ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-
+    const res=await fetch('/tickets/recent?limit=200');
+    allTickets=await res.json();
+    page=1;
+    document.getElementById('last-refresh').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     renderKPIs(allTickets);
     renderStatusCards(allTickets);
     renderVolumeChart(allTickets);
@@ -707,7 +596,7 @@ async function refresh() {
     renderIssueChart(allTickets);
     renderTable();
   } catch(e) {
-    document.getElementById('last-refresh').textContent = 'Error — retrying in 30s';
+    document.getElementById('last-refresh').textContent='Error — retrying in 30s';
     console.error(e);
   }
 }
