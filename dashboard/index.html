@@ -275,40 +275,6 @@
     }
     .demo-ex-btn:hover { border-color: #4f46e5; color: #818cf8; }
 
-    /* Pipeline flow */
-    .pipeline { display: flex; align-items: center; gap: 0; margin-bottom: 18px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
-    .pipe-step {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      background: #060d1a; border: 1px solid #1a2332;
-      border-radius: 10px; padding: 12px 14px;
-      min-width: 108px; text-align: center;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-    }
-    .pipe-step-icon { font-size: 20px; line-height: 1; filter: grayscale(1) opacity(0.3); transition: filter 0.3s; }
-    .pipe-step-label { font-size: 11px; color: #374151; font-weight: 500; transition: color 0.3s; white-space: nowrap; }
-    .pipe-step-detail { font-size: 10px; color: #1f2937; transition: color 0.3s; }
-
-    .pipe-step.active {
-      border-color: #4f46e5;
-      background: #0c0f2a;
-      box-shadow: 0 0 0 1px #4f46e5, 0 0 16px rgba(79,70,229,0.2);
-    }
-    .pipe-step.active .pipe-step-icon { filter: none; animation: pulse-icon 0.8s ease-in-out infinite alternate; }
-    .pipe-step.active .pipe-step-label { color: #818cf8; }
-    .pipe-step.active .pipe-step-detail { color: #4b5563; }
-
-    .pipe-step.done { border-color: #166534; background: #052e16; }
-    .pipe-step.done .pipe-step-icon { filter: none; animation: none; }
-    .pipe-step.done .pipe-step-label { color: #4ade80; }
-    .pipe-step.done .pipe-step-detail { color: #166534; }
-
-    @keyframes pulse-icon { from { transform: scale(1); } to { transform: scale(1.15); } }
-
-    .pipe-arrow { font-size: 16px; color: #1a2332; padding: 0 6px; flex-shrink: 0; transition: color 0.3s; }
-    .pipe-arrow.lit { color: #4f46e5; }
-    .pipe-arrow.done { color: #166534; }
-
     /* Result card */
     .demo-result {
       background: #052e16; border: 1px solid #166534;
@@ -420,45 +386,6 @@
       <button class="demo-ex-btn" onclick="fillExample('The app keeps crashing every time I try to open the reports section.')">💥 App crash</button>
       <button class="demo-ex-btn" onclick="fillExample('How do I export my data to CSV? I cannot find the option anywhere.')">❓ How-to question</button>
       <button class="demo-ex-btn" onclick="fillExample('Delivery is 3 days late and I need this for an event tomorrow. Very disappointed.')">📦 Late delivery</button>
-    </div>
-
-    <!-- Pipeline steps -->
-    <div class="pipeline" id="demo-pipeline">
-      <div class="pipe-step" id="ps-0">
-        <div class="pipe-step-icon">📨</div>
-        <div class="pipe-step-label">Received</div>
-        <div class="pipe-step-detail">Message ingested</div>
-      </div>
-      <div class="pipe-arrow" id="pa-0">→</div>
-      <div class="pipe-step" id="ps-1">
-        <div class="pipe-step-icon">🤖</div>
-        <div class="pipe-step-label">Claude AI</div>
-        <div class="pipe-step-detail">Analysing text</div>
-      </div>
-      <div class="pipe-arrow" id="pa-1">→</div>
-      <div class="pipe-step" id="ps-2">
-        <div class="pipe-step-icon">💬</div>
-        <div class="pipe-step-label">Sentiment</div>
-        <div class="pipe-step-detail">Scoring tone</div>
-      </div>
-      <div class="pipe-arrow" id="pa-2">→</div>
-      <div class="pipe-step" id="ps-3">
-        <div class="pipe-step-icon">🏷️</div>
-        <div class="pipe-step-label">Issue type</div>
-        <div class="pipe-step-detail">Classifying</div>
-      </div>
-      <div class="pipe-arrow" id="pa-3">→</div>
-      <div class="pipe-step" id="ps-4">
-        <div class="pipe-step-icon">🚨</div>
-        <div class="pipe-step-label">Priority</div>
-        <div class="pipe-step-detail">Assigning level</div>
-      </div>
-      <div class="pipe-arrow" id="pa-4">→</div>
-      <div class="pipe-step" id="ps-5">
-        <div class="pipe-step-icon">✅</div>
-        <div class="pipe-step-label">Stored</div>
-        <div class="pipe-step-detail">In dashboard</div>
-      </div>
     </div>
 
     <!-- Result -->
@@ -823,31 +750,8 @@ function fillExample(msg) {
   document.getElementById('demo-result').style.display = 'none';
 }
 
-function resetPipeline() {
-  for (let i=0;i<6;i++) {
-    const s=document.getElementById(`ps-${i}`);
-    if(s){s.classList.remove('active','done');}
-  }
-  for (let i=0;i<5;i++) {
-    const a=document.getElementById(`pa-${i}`);
-    if(a){a.classList.remove('lit','done');}
-  }
-}
-
-function activateStep(idx) {
-  for(let i=0;i<idx;i++){
-    const s=document.getElementById(`ps-${i}`);
-    if(s){s.classList.remove('active');s.classList.add('done');}
-    const a=document.getElementById(`pa-${i}`);
-    if(a){a.classList.remove('lit');a.classList.add('done');}
-  }
-  const cur=document.getElementById(`ps-${idx}`);
-  if(cur){cur.classList.add('active');}
-  if(idx>0){
-    const prev=document.getElementById(`pa-${idx-1}`);
-    if(prev){prev.classList.add('lit');}
-  }
-}
+function resetPipeline() {}
+function activateStep(idx) {}
 
 async function sendTriage() {
   const msg     = document.getElementById('demo-msg').value.trim();
@@ -862,10 +766,6 @@ async function sendTriage() {
   resultEl.style.display = 'none';
   resetPipeline();
 
-  // Animate pipeline steps while API call runs
-  const DELAYS = [0, 400, 900, 1400, 1900];
-  DELAYS.forEach((d,i) => setTimeout(() => activateStep(i), d));
-
   try {
     const res  = await fetch('/triage', {
       method:  'POST',
@@ -876,21 +776,13 @@ async function sendTriage() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    // Complete remaining pipeline steps
-    const elapsed = Date.now();
+    // Show result immediately
     setTimeout(() => {
-      activateStep(5);
-      setTimeout(() => {
-        // Mark all done
-        for(let i=0;i<6;i++){const s=document.getElementById(`ps-${i}`);if(s){s.classList.remove('active');s.classList.add('done');}}
-        for(let i=0;i<5;i++){const a=document.getElementById(`pa-${i}`);if(a){a.classList.remove('lit');a.classList.add('done');}}
-        showResult(data);
-        btn.disabled = false;
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send to AI';
-        // Refresh dashboard in 2s so new ticket appears
-        setTimeout(() => refresh(), 2000);
-      }, 400);
-    }, Math.max(0, 2200 - (Date.now() - elapsed)));
+      showResult(data);
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send to AI';
+      setTimeout(() => refresh(), 2000);
+    }, 300);
 
   } catch(err) {
     resetPipeline();
