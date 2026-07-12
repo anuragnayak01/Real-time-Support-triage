@@ -1,6 +1,6 @@
 # Real-Time Support Triager
 
-AI pipeline that classifies customer support messages, retrieves similar past solutions, and drafts personalized replies — deployed on Render.
+AI pipeline that classifies customer support messages, retrieves similar past solutions, and drafts personalized replies deployed on Render.
 
 **Live:** [insightpulse-2vvm.onrender.com/docs](https://insightpulse-2vvm.onrender.com/docs) · **Dashboard:** [/dashboard](https://insightpulse-2vvm.onrender.com/dashboard)
 
