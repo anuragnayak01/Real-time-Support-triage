@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>InsightPulse</title>
+<title>InsightPulser</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,23 +34,23 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #263045; }
 
 /* Top header (replaces the old left sidebar) */
-.topbar { width: 100%; background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 20px; position: fixed; top: 0; left: 0; z-index: 20; box-shadow: 0 2px 16px rgba(15,23,42,0.10), 0 1px 2px rgba(0,0,0,0.04); }
+.topbar { width: 100%; background: linear-gradient(180deg, #0d1426, #0b1120); border-bottom: 1px solid #1a2332; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 20px; position: fixed; top: 0; left: 0; z-index: 20; box-shadow: 0 2px 20px rgba(0,0,0,0.35); }
 .tb-left { display: flex; align-items: center; gap: 26px; min-width: 0; }
 .sb-logo { display: flex; align-items: center; gap: 10px; padding: 4px 0; margin: 0; cursor: pointer; background: none; border: none; text-align: left; flex-shrink: 0; }
 .sb-icon { width: 30px; height: 30px; background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 2px 8px rgba(79,70,229,0.35); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
-.sb-name { font-size: 13.5px; font-weight: 600; color: #111827; }
-.sb-role { font-size: 10px; color: #6b7280; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px; padding: 1px 7px; display: inline-block; margin-top: 2px; }
+.sb-name { font-size: 13.5px; font-weight: 600; color: #f9fafb; }
+.sb-role { font-size: 10px; color: #9ca3af; background: #0f172a; border: 1px solid #1a2332; border-radius: 4px; padding: 1px 7px; display: inline-block; margin-top: 2px; }
 .tb-nav { display: flex; align-items: center; gap: 2px; }
-.sb-link { display: flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 6px; color: #4b5563; font-size: 13px; cursor: pointer; transition: all 0.12s; background: none; border: none; font-family: inherit; text-align: left; white-space: nowrap; }
-.sb-link:hover { background: #f3f4f6; color: #111827; }
-.sb-link.active { background: #eef2ff; color: #4338ca; }
+.sb-link { display: flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 6px; color: #9ca3af; font-size: 13px; cursor: pointer; transition: all 0.12s; background: none; border: none; font-family: inherit; text-align: left; white-space: nowrap; }
+.sb-link:hover { background: #0f172a; color: #f3f4f6; }
+.sb-link.active { background: rgba(99,102,241,0.16); color: #a5b4fc; }
 .sb-link svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.8; }
 .tb-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 .sb-footer { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-.sb-footer-label { font-size: 10px; color: #9ca3af; }
-.sb-footer-time { font-size: 11px; color: #4b5563; font-variant-numeric: tabular-nums; }
-.sb-footer-link { font-size: 11.5px; color: #4f46e5; text-decoration: none; font-weight: 500; }
-.sb-footer-link:hover { text-decoration: underline; }
+.sb-footer-label { font-size: 10px; color: #4b5563; }
+.sb-footer-time { font-size: 11px; color: #9ca3af; font-variant-numeric: tabular-nums; }
+.sb-footer-link { font-size: 11.5px; color: #a5b4fc; text-decoration: none; font-weight: 500; }
+.sb-footer-link:hover { color: #c7d2fe; text-decoration: underline; }
 
 /* Main */
 .main { margin-left: 0; margin-top: 60px; flex: 1; padding: 28px 28px 48px; min-width: 0; }
@@ -268,7 +268,7 @@ td.msg  { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-spa
     <button class="sb-logo" onclick="showSection('overview')">
       <div class="sb-icon">ST</div>
       <div>
-        <div class="sb-name">InsightPulse</div>
+        <div class="sb-name">InsightPulser</div>
         <span class="sb-role">Live dashboard</span>
       </div>
     </button>
@@ -304,7 +304,7 @@ td.msg  { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-spa
   <section class="page-section active" id="section-overview">
     <div class="page-head">
       <div>
-        <div class="page-title">Support Dashboard</div>
+        <div class="page-title">Dashboard</div>
         <div class="page-sub">Real-time monitoring · overview snapshot</div>
       </div>
       <div class="head-right">
