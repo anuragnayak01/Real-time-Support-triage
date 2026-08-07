@@ -1,4 +1,4 @@
-# Real-Time Support Triager
+# InsightPulse : Real-Time Support Triager
 
 AI pipeline that classifies customer support messages, retrieves similar past solutions, and drafts personalized replies deployed on Render.
 
