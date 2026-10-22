@@ -20,7 +20,7 @@ from crewai.tools import tool
 from knowledge_base import retrieve_similar_tickets
 from state import TicketState, new_ticket
 
-GROQ_MODEL = "groq/llama-3.3-70b-versatile"  # CrewAI LLM format: "provider/model"
+GROQ_MODEL = "groq/openai/gpt-oss-120b"  # CrewAI LLM format: "provider/model"
 
 
 def get_crew_llm() -> LLM:
