@@ -32,7 +32,7 @@ load_dotenv()  # reads .env in the project root (GROQ_API_KEY, SLACK_WEBHOOK_URL
 # Config
 # ---------------------------------------------------------------------------
 
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "openai/gpt-oss-120b"
 DB_PATH = "tickets.db"
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
