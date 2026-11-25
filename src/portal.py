@@ -42,6 +42,7 @@ def current_user(authorization: str = Header(default="")):
         assert hmac.compare_digest(sig, hmac.new(SECRET, body.encode(), hashlib.sha256).hexdigest())
         p = json.loads(base64.urlsafe_b64decode(body))
         assert p["exp"] > time.time()
+        assert db().execute("SELECT 1 FROM users WHERE id=? AND role=?", (p["id"], p["role"])).fetchone()
         return p
     except Exception:
         raise HTTPException(401, "Not authenticated")
@@ -67,6 +68,8 @@ def init_db():
 
 
 ANALYZER = None
+STARTED = time.time()
+WAIT_REPLY = "Thanks for reaching out - we are looking into this and will update you shortly."
 
 
 def set_analyzer(fn):
@@ -75,29 +78,36 @@ def set_analyzer(fn):
     ANALYZER = fn
 
 
-def analyze(text, source="portal"):
-    if ANALYZER:
-        try:
-            return ANALYZER(text, source)
-        except Exception as e:
-            print("pipeline failed, using fallback:", e)
-    """EDIT HERE: call your real pipeline (LangGraph sentiment/features + CrewAI RAG reply)
-    and return dict(sentiment=-1..1, category=str, priority=str, reply=str)."""
-    # from pipeline import run_triage; return run_triage(text)
+def quick_analyze(text):
+    """Instant keyword analysis so a ticket is visible immediately."""
     t = text.lower()
     neg = sum(w in t for w in ["charged", "refund", "angry", "worst", "broken", "down", "cannot", "urgent", "crash"])
     cat = "Billing" if any(w in t for w in ["charge", "refund", "invoice"]) else "Technical" if any(w in t for w in ["error", "crash", "login", "bug"]) else "General"
-    return dict(sentiment=round(-min(neg, 4) / 4, 2), category=cat, priority="critical" if neg >= 3 else "high" if neg == 2 else "normal",
-                reply="Thanks for reaching out - we're looking into this and will update you shortly.")
+    return dict(sentiment=round(-min(neg, 4) / 4, 2), category=cat, priority="critical" if neg >= 3 else "high" if neg == 2 else "normal")
+
+
+def _enrich(tid, text, source):
+    """Slow LLM pipeline runs in the background, then updates the saved ticket."""
+    if not ANALYZER:
+        return
+    try:
+        a = ANALYZER(text, source)
+        c = db()
+        c.execute("UPDATE portal_tickets SET sentiment=?,category=?,priority=?,reply=? WHERE id=?",
+                  (a["sentiment"], a["category"], a["priority"], a["reply"], tid))
+        c.commit()
+    except Exception as e:
+        print("pipeline failed, keeping quick analysis:", e)
 
 
 def save_ticket(customer_id, mail, source, subject, message):
-    a = analyze(subject + "\n" + message, source)
+    text = subject + "\n" + message
+    a = quick_analyze(text)
     c = db()
-    c.execute("INSERT INTO portal_tickets(customer_id,email,source,subject,message,sentiment,category,priority,reply,created) VALUES(?,?,?,?,?,?,?,?,?,?)",
-              (customer_id, mail, source, subject, message, a["sentiment"], a["category"], a["priority"], a["reply"], time.time()))
+    cur = c.execute("INSERT INTO portal_tickets(customer_id,email,source,subject,message,sentiment,category,priority,reply,created) VALUES(?,?,?,?,?,?,?,?,?,?)",
+                    (customer_id, mail, source, subject, message, a["sentiment"], a["category"], a["priority"], WAIT_REPLY, time.time()))
     c.commit()
-    # Critical tickets: reuse your existing Slack alert / Jira card function here.
+    threading.Thread(target=_enrich, args=(cur.lastrowid, text, source), daemon=True).start()
 
 
 class Auth(BaseModel):
@@ -154,6 +164,29 @@ def all_tickets(_=Depends(admin_only)):
 @router.patch("/admin/tickets/{tid}")
 def set_status(tid: int, status: str, _=Depends(admin_only)):
     c = db(); c.execute("UPDATE portal_tickets SET status=? WHERE id=?", (status, tid)); c.commit()
+    return {"ok": True}
+
+
+@router.get("/admin/debug")
+def debug(_=Depends(admin_only)):
+    c = db()
+    return {"db": DB, "users": c.execute("SELECT COUNT(*) FROM users").fetchone()[0],
+            "tickets": c.execute("SELECT COUNT(*) FROM portal_tickets").fetchone()[0],
+            "uptime_seconds": int(time.time() - STARTED)}
+
+
+class Sim(BaseModel):
+    channel: str  # email | app_store
+    message: str
+    sender: str = "guest@example.com"
+
+
+@router.post("/admin/simulate")
+def simulate(s: Sim, _=Depends(admin_only)):
+    """Demo tool: inject a ticket as if it arrived from another channel."""
+    if s.channel not in ("email", "app_store"):
+        raise HTTPException(400, "channel must be email or app_store")
+    save_ticket("GUEST", s.sender, s.channel, s.message[:60], s.message)
     return {"ok": True}
 
 
