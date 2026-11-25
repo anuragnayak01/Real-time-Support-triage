@@ -47,7 +47,7 @@ def _run_pipeline(text: str, source: str) -> dict:
     t = new_ticket(
         ticket_id=f"T{uuid.uuid4().hex[:8]}",
         message=text,
-        channel="email" if source == "email" else "intercom",
+        channel=source if source in ("email", "app_store") else "intercom",
         timestamp=datetime.now(timezone.utc).isoformat(),
     )
     t = run_crew(_graph.invoke(t))
