@@ -74,6 +74,7 @@ const ago=s=>{const m=(Date.now()/1000-s)/60;return m<1?"just now":m<60?Math.rou
 const mood=v=>v>.2?["Positive","var(--gr)"]:v<-.3?["Negative","var(--co)"]:["Neutral","var(--am)"];
 const pill=p=>`<span class="pill ${p}">${esc(p)}</span>`,ini=s=>esc((s||"?")[0].toUpperCase());
 async function api(p,o={}){const r=await fetch(API+p,{...o,headers:{"Content-Type":"application/json",Authorization:"Bearer "+S.token,...(o.headers||{})}});
+  if(r.status===401&&S.token){logout();$("err").textContent="Session expired, please sign in again.";}
   if(!r.ok)throw new Error((await r.json().catch(()=>({}))).detail||r.statusText);return r.json();}
 function toggleMode(){S.signup=!S.signup;$("at").textContent=S.signup?"Create your account":"Welcome back";$("tg").textContent=S.signup?"Have an account? Sign in":"New customer? Create an account";}
 async function doAuth(){$("err").textContent="";
@@ -85,7 +86,7 @@ async function show(){$("auth").classList.add("hide");$("app").classList.remove(
   $("un").textContent=S.email;$("ur").textContent=S.role==="admin"?"Administrator":"Customer · "+S.cid;$("ua").textContent=S.email[0].toUpperCase();
   S.view=S.role==="admin"?"overview":"mine";await load();}
 async function load(){T=await api(S.role==="admin"?"/admin/tickets":"/portal/tickets");render();}
-setInterval(()=>{if(S.token&&S.role==="admin"&&$("modal").classList.contains("hide"))load().catch(()=>{})},15000);
+setInterval(()=>{if(S.token&&S.view!=="new"&&$("modal").classList.contains("hide"))load().catch(()=>{})},15000);
 function go(v){S.view=v;render();}
 function render(){const items=S.role==="admin"?[["overview","⌂","Overview"],["tickets","☰","Tickets"]]:[["mine","☰","My tickets"],["new","＋","New complaint"]];
   $("nav").innerHTML=items.map(([k,i,l])=>`<a class="ni ${S.view===k?"on":""}" onclick="go('${k}')"><i>${i}</i><span>${l}</span></a>`).join("");
@@ -110,8 +111,11 @@ function vOverview(){const a=filt(),open=a.filter(t=>t.status!=="resolved").leng
   <div class="g2"><div class="card"><span class="leg"><i style="background:var(--co)"></i>New<i style="background:var(--gr)"></i>Resolved</span><h3>Tickets, last 7 days</h3>${chart()}</div>
   <div class="card"><h3>Recent complaints</h3>${a.slice(0,3).map(t=>`<div class="fb" onclick="openT(${t.id})"><div class="av">${ini(t.email)}</div><div><p>${esc(t.subject)}</p><small>${esc(t.source)} · ${ago(t.created)} · <b style="color:${mood(t.sentiment)[1]}">${mood(t.sentiment)[0]}</b></small></div></div>`).join("")||'<p class="mu">No tickets yet.</p>'}</div></div>
   <div class="g3"><div class="card"><h3>Top customers</h3><table><tr><th>Customer</th><th>Tickets</th></tr>${top.map(([c,n])=>`<tr><td>${esc(c)}</td><td>${n}</td></tr>`).join("")}</table></div>
-  <div class="card"><h3>Support inbox</h3><div class="big"><div><b>${a.filter(t=>t.source==="portal").length}</b>Portal</div><div><b>${mail}</b>Email</div><div><b>${a.filter(t=>t.customer_id==="GUEST").length}</b>Guest</div></div></div>
-  <div class="card"><h3>Priority mix</h3>${bars(cnt(a,t=>t.priority),{critical:"var(--co)",high:"var(--am)",normal:"var(--gr)"})}</div></div>`}
+  <div class="card"><h3>Support inbox</h3><div class="big"><div><b>${a.filter(t=>t.source==="portal").length}</b>Portal</div><div><b>${mail}</b>Email</div><div><b>${a.filter(t=>t.source==="app_store").length}</b>App Store</div></div></div>
+  <div class="card"><h3>Priority mix</h3>${bars(cnt(a,t=>t.priority),{critical:"var(--co)",high:"var(--am)",normal:"var(--gr)"})}</div></div>
+  <div class="card"><h3>Simulate an incoming complaint</h3><p class="mu" style="margin-top:-8px">Demo tool: injects a ticket as if it arrived from another channel.</p>
+  <div style="display:flex;gap:10px;align-items:center"><select id="sc" class="st" style="width:170px"><option value="app_store">App Store review</option><option value="email">Email</option></select><input id="sm" placeholder="Type the complaint or review…"><button class="co" onclick="sim()">Send</button></div></div>`}
+async function sim(){const m=$("sm").value,c=$("sc").value;if(!m)return;await api("/admin/simulate",{method:"POST",body:JSON.stringify({channel:c,message:m,sender:c==="email"?"guest@example.com":"appstore.reviewer@demo"})});await load();}
 function vTickets(){const a=filt();$("page").innerHTML=`<h1>Tickets</h1><p>All complaints from the portal and support inbox</p>
   <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>${a.length} tickets</h3>
   <select class="st" onchange="S.flt=this.value;render()"><option value="">All priorities</option>${["critical","high","normal"].map(p=>`<option ${S.flt===p?"selected":""}>${p}</option>`).join("")}</select></div>
